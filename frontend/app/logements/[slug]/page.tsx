@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { fetchLogementBySlug } from '@/lib/api';
 import { PropertyGallery } from '@/components/PropertyGallery';
 import { PropertyAmenities } from '@/components/PropertyAmenities';
+import { ReserveButton } from '@/components/ReserveButton';
 import { MapPin, Users, Bed, Bath, ArrowLeft, ShieldCheck, UserCheck, CalendarCheck } from 'lucide-react';
 
 export default async function LogementDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -141,12 +142,12 @@ export default async function LogementDetailPage({ params }: { params: Promise<{
             </div>
 
             {/* CTA Reservation Button per Rule #9 */}
-            <button
-              onClick={() => alert(`Réservation préparée pour "${logement.nom}". Le module de paiement et calendrier sera activé dans la phase suivante.`)}
+            <ReserveButton
+              propertyName={logement.nom}
               className="w-full py-3.5 bg-brand-500 hover:bg-brand-600 active:scale-98 text-white font-bold text-sm rounded-xl shadow-lg shadow-brand-500/25 transition-all flex items-center justify-center gap-2"
             >
               <span>Réserver maintenant</span>
-            </button>
+            </ReserveButton>
 
             <p className="text-[11px] text-slate-400 text-center">
               Aucun montant ne sera débité à cette étape.
@@ -164,12 +165,12 @@ export default async function LogementDetailPage({ params }: { params: Promise<{
           <span className="text-xs text-slate-500 font-normal"> / nuit</span>
         </div>
 
-        <button
-          onClick={() => alert(`Réservation préparée pour "${logement.nom}". Le module de paiement et calendrier sera activé dans la phase suivante.`)}
+        <ReserveButton
+          propertyName={logement.nom}
           className="px-5 py-2.5 bg-brand-500 text-white font-bold text-xs rounded-xl shadow-md shadow-brand-500/20 active:scale-95 transition-all"
         >
           Réserver maintenant
-        </button>
+        </ReserveButton>
       </div>
     </div>
   );

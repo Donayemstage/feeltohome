@@ -44,9 +44,9 @@ export const MobileBottomNav: React.FC = () => {
         </Link>
 
         <Link
-          href="/profil"
+          href="/connexion"
           className={`flex flex-col items-center justify-center gap-1 w-16 h-12 transition-colors ${
-            pathname === '/profil' ? 'text-brand-500 font-bold' : 'text-slate-500 hover:text-slate-800'
+            pathname === '/connexion' ? 'text-brand-500 font-bold' : 'text-slate-500 hover:text-slate-800'
           }`}
         >
           <User className="w-5 h-5" />

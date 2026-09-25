@@ -47,6 +47,7 @@ export const PropertyGallery: React.FC<GalleryProps> = ({ photos, propertyName }
         <img
           src={photoUrls[selectedIndex]}
           alt={`${propertyName} - Photo ${selectedIndex + 1}`}
+          onError={(e) => { e.currentTarget.src = fallbackUrl; }}
           onClick={() => setIsLightboxOpen(true)}
           className="w-full h-full object-cover cursor-pointer group-hover:scale-102 transition-transform duration-300"
         />

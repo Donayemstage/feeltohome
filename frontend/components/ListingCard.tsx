@@ -25,6 +25,9 @@ export const ListingCard: React.FC<{ listing: LogementData }> = ({ listing }) =>
         <img
           src={photoUrl}
           alt={listing.nom}
+          onError={(e) => {
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80';
+          }}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
         {/* Type Badge */}
