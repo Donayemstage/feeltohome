@@ -2,12 +2,13 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useLanguage } from './LanguageContext';
 import { Locale } from '@/lib/i18n';
-import { Globe, Menu, X, User, ChevronDown, Check, PlusCircle } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const { locale, setLocale, t } = useLanguage();
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -42,6 +43,11 @@ export const Header: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    return pathname.startsWith(href);
+  };
+
   return (
     <header
       className={`sticky top-0 inset-x-0 z-50 bg-white border-b border-slate-200/90 text-slate-900 transition-shadow duration-300 ${
@@ -50,47 +56,71 @@ export const Header: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
+        {/* Logo with FontAwesome Icon */}
+        <Link href="/" className="flex items-center gap-2.5 group">
           <div className="w-9 h-9 rounded-xl bg-brand-500 text-white flex items-center justify-center shadow-md shadow-brand-500/30 group-hover:bg-brand-600 transition-colors">
-            <span className="material-symbols-outlined text-[24px]">roofing</span>
+            <i className="fa-solid fa-house-chimney text-lg"></i>
           </div>
           <span className="text-xl font-extrabold tracking-tight text-slate-900 group-hover:text-brand-600 transition-colors">
             FeelToHome
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-semibold">
+        {/* Desktop Navigation with Active Page Highlight ("foncer") */}
+        <nav className="hidden md:flex items-center gap-2 text-sm font-semibold">
           <Link
             href="/"
-            className="px-3 py-1.5 rounded-lg transition-all text-slate-700 hover:text-brand-600 hover:bg-slate-100"
+            className={`px-3.5 py-1.5 rounded-lg transition-all ${
+              isActive('/')
+                ? 'bg-slate-900 text-white font-bold shadow-xs'
+                : 'text-slate-700 hover:text-brand-600 hover:bg-slate-100'
+            }`}
           >
             {t.nav.home}
           </Link>
+
           <Link
             href="/logements"
-            className="px-3 py-1.5 rounded-lg transition-all text-slate-700 hover:text-brand-600 hover:bg-slate-100"
+            className={`px-3.5 py-1.5 rounded-lg transition-all ${
+              isActive('/logements')
+                ? 'bg-slate-900 text-white font-bold shadow-xs'
+                : 'text-slate-700 hover:text-brand-600 hover:bg-slate-100'
+            }`}
           >
             {t.nav.listings}
           </Link>
+
           <Link
             href="/a-propos"
-            className="px-3 py-1.5 rounded-lg transition-all text-slate-700 hover:text-brand-600 hover:bg-slate-100"
+            className={`px-3.5 py-1.5 rounded-lg transition-all ${
+              isActive('/a-propos')
+                ? 'bg-slate-900 text-white font-bold shadow-xs'
+                : 'text-slate-700 hover:text-brand-600 hover:bg-slate-100'
+            }`}
           >
             {t.nav.about}
           </Link>
+
           <Link
             href="/contact"
-            className="px-3 py-1.5 rounded-lg transition-all text-slate-700 hover:text-brand-600 hover:bg-slate-100"
+            className={`px-3.5 py-1.5 rounded-lg transition-all ${
+              isActive('/contact')
+                ? 'bg-slate-900 text-white font-bold shadow-xs'
+                : 'text-slate-700 hover:text-brand-600 hover:bg-slate-100'
+            }`}
           >
             {t.nav.contact}
           </Link>
+
           <Link
             href="/devenir-hote"
-            className="px-3.5 py-1.5 rounded-xl transition-all font-bold flex items-center gap-1.5 text-brand-600 hover:text-brand-700 bg-brand-50 hover:bg-brand-100/80 border border-brand-200/60"
+            className={`px-3.5 py-1.5 rounded-xl transition-all font-bold flex items-center gap-1.5 ${
+              isActive('/devenir-hote')
+                ? 'bg-brand-700 text-white font-bold shadow-sm'
+                : 'text-brand-600 hover:text-brand-700 bg-brand-50 hover:bg-brand-100/80 border border-brand-200/60'
+            }`}
           >
-            <PlusCircle className="w-4 h-4 text-brand-500" />
+            <i className="fa-solid fa-circle-plus text-sm"></i>
             <span>Publier une annonce</span>
           </Link>
         </nav>
@@ -105,9 +135,9 @@ export const Header: React.FC = () => {
               onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
               className="flex items-center gap-2 border border-slate-200 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all bg-slate-100 hover:bg-slate-200/80 text-slate-800 cursor-pointer shadow-xs"
             >
-              <Globe className="w-3.5 h-3.5 shrink-0 text-brand-600" />
+              <i className="fa-solid fa-globe text-brand-600 text-sm"></i>
               <span>{locale === 'fr' ? 'FR — Français' : locale === 'en' ? 'EN — English' : 'DE — Deutsch'}</span>
-              <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-200 ${isLangMenuOpen ? 'rotate-180' : ''}`} />
+              <i className={`fa-solid fa-chevron-down text-[10px] text-slate-500 transition-transform duration-200 ${isLangMenuOpen ? 'rotate-180' : ''}`}></i>
             </button>
 
             {isLangMenuOpen && (
@@ -124,7 +154,7 @@ export const Header: React.FC = () => {
                     <span className="text-base">🇫🇷</span>
                     <span>Français (FR)</span>
                   </span>
-                  {locale === 'fr' && <Check className="w-3.5 h-3.5" />}
+                  {locale === 'fr' && <i className="fa-solid fa-check text-xs"></i>}
                 </button>
 
                 <button
@@ -139,7 +169,7 @@ export const Header: React.FC = () => {
                     <span className="text-base">🇬🇧</span>
                     <span>English (EN)</span>
                   </span>
-                  {locale === 'en' && <Check className="w-3.5 h-3.5" />}
+                  {locale === 'en' && <i className="fa-solid fa-check text-xs"></i>}
                 </button>
 
                 <button
@@ -154,7 +184,7 @@ export const Header: React.FC = () => {
                     <span className="text-base">🇩🇪</span>
                     <span>Deutsch (DE)</span>
                   </span>
-                  {locale === 'de' && <Check className="w-3.5 h-3.5" />}
+                  {locale === 'de' && <i className="fa-solid fa-check text-xs"></i>}
                 </button>
               </div>
             )}
@@ -171,7 +201,7 @@ export const Header: React.FC = () => {
             href="/inscription"
             className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-xl shadow-md shadow-brand-500/30 transition-all hover:scale-[1.02] active:scale-95 border border-brand-400/30"
           >
-            <User className="w-3.5 h-3.5" />
+            <i className="fa-solid fa-user-plus text-xs"></i>
             <span>{t.nav.register}</span>
           </Link>
         </div>
@@ -184,10 +214,10 @@ export const Header: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-              className="flex items-center gap-1 border border-slate-200 bg-slate-100 text-slate-800 rounded-xl px-2.5 py-1 text-[11px] font-bold"
+              className="flex items-center gap-1.5 border border-slate-200 bg-slate-100 text-slate-800 rounded-xl px-2.5 py-1 text-[11px] font-bold"
             >
               <span>{locale.toUpperCase()}</span>
-              <ChevronDown className={`w-3 h-3 text-slate-500 transition-transform ${isLangMenuOpen ? 'rotate-180' : ''}`} />
+              <i className={`fa-solid fa-chevron-down text-[9px] text-slate-500 transition-transform ${isLangMenuOpen ? 'rotate-180' : ''}`}></i>
             </button>
 
             {isLangMenuOpen && (
@@ -225,46 +255,66 @@ export const Header: React.FC = () => {
             className="p-2 rounded-xl text-slate-800 hover:bg-slate-100 transition-colors"
             aria-label="Menu mobile"
           >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMenuOpen ? <i className="fa-solid fa-xmark text-xl"></i> : <i className="fa-solid fa-bars text-xl"></i>}
           </button>
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Drawer Menu with Active Route Highlighting ("foncer") */}
       {isMenuOpen && (
-        <div className="md:hidden border-b border-slate-200 bg-white text-slate-900 px-4 pt-2 pb-6 space-y-3 shadow-xl">
+        <div className="md:hidden border-b border-slate-200 bg-white text-slate-900 px-4 pt-2 pb-6 space-y-2.5 shadow-xl">
           <Link
             href="/"
             onClick={() => setIsMenuOpen(false)}
-            className="block px-3 py-2 text-sm font-semibold rounded-xl text-slate-800 hover:bg-slate-100 transition-all"
+            className={`block px-3.5 py-2 text-sm rounded-xl transition-all ${
+              isActive('/')
+                ? 'bg-slate-900 text-white font-bold'
+                : 'text-slate-800 font-semibold hover:bg-slate-100'
+            }`}
           >
             {t.nav.home}
           </Link>
           <Link
             href="/logements"
             onClick={() => setIsMenuOpen(false)}
-            className="block px-3 py-2 text-sm font-semibold rounded-xl text-slate-800 hover:bg-slate-100 transition-all"
+            className={`block px-3.5 py-2 text-sm rounded-xl transition-all ${
+              isActive('/logements')
+                ? 'bg-slate-900 text-white font-bold'
+                : 'text-slate-800 font-semibold hover:bg-slate-100'
+            }`}
           >
             {t.nav.listings}
           </Link>
           <Link
             href="/a-propos"
             onClick={() => setIsMenuOpen(false)}
-            className="block px-3 py-2 text-sm font-semibold rounded-xl text-slate-800 hover:bg-slate-100 transition-all"
+            className={`block px-3.5 py-2 text-sm rounded-xl transition-all ${
+              isActive('/a-propos')
+                ? 'bg-slate-900 text-white font-bold'
+                : 'text-slate-800 font-semibold hover:bg-slate-100'
+            }`}
           >
             {t.nav.about}
           </Link>
           <Link
             href="/contact"
             onClick={() => setIsMenuOpen(false)}
-            className="block px-3 py-2 text-sm font-semibold rounded-xl text-slate-800 hover:bg-slate-100 transition-all"
+            className={`block px-3.5 py-2 text-sm rounded-xl transition-all ${
+              isActive('/contact')
+                ? 'bg-slate-900 text-white font-bold'
+                : 'text-slate-800 font-semibold hover:bg-slate-100'
+            }`}
           >
             {t.nav.contact}
           </Link>
           <Link
             href="/devenir-hote"
             onClick={() => setIsMenuOpen(false)}
-            className="block px-3 py-2 text-sm font-bold text-brand-600 bg-brand-50 rounded-xl hover:bg-brand-100 transition-all"
+            className={`block px-3.5 py-2 text-sm rounded-xl transition-all ${
+              isActive('/devenir-hote')
+                ? 'bg-brand-600 text-white font-bold'
+                : 'text-brand-600 bg-brand-50 font-bold hover:bg-brand-100'
+            }`}
           >
             + Publier une annonce
           </Link>

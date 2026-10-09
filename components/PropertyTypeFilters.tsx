@@ -3,16 +3,15 @@
 import React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useLanguage } from './LanguageContext';
-import { Building2, Hotel, Home as HomeIcon, DoorClosed, Palmtree, Warehouse, LayoutGrid } from 'lucide-react';
 
 const CATEGORIES = [
-  { key: 'TOUS', labelKey: 'allTypes', icon: LayoutGrid },
-  { key: 'HOTEL', labelKey: 'HOTEL', icon: Hotel },
-  { key: 'APPARTEMENT', labelKey: 'APPARTEMENT', icon: Building2 },
-  { key: 'STUDIO', labelKey: 'STUDIO', icon: DoorClosed },
-  { key: 'RESIDENCE', labelKey: 'RESIDENCE', icon: HomeIcon },
-  { key: 'VILLA', labelKey: 'VILLA', icon: Palmtree },
-  { key: 'AUBERGE', labelKey: 'AUBERGE', icon: Warehouse },
+  { key: 'TOUS', labelKey: 'allTypes', iconClass: 'fa-solid fa-border-all' },
+  { key: 'HOTEL', labelKey: 'HOTEL', iconClass: 'fa-solid fa-hotel' },
+  { key: 'APPARTEMENT', labelKey: 'APPARTEMENT', iconClass: 'fa-solid fa-building' },
+  { key: 'STUDIO', labelKey: 'STUDIO', iconClass: 'fa-solid fa-door-closed' },
+  { key: 'RESIDENCE', labelKey: 'RESIDENCE', iconClass: 'fa-solid fa-house-chimney' },
+  { key: 'VILLA', labelKey: 'VILLA', iconClass: 'fa-solid fa-tree-city' },
+  { key: 'AUBERGE', labelKey: 'AUBERGE', iconClass: 'fa-solid fa-warehouse' },
 ];
 
 export const PropertyTypeFilters: React.FC = () => {
@@ -39,7 +38,6 @@ export const PropertyTypeFilters: React.FC = () => {
 
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         {CATEGORIES.map((cat) => {
-          const Icon = cat.icon;
           const isActive = activeType.toUpperCase() === cat.key;
           const label = cat.key === 'TOUS' 
             ? t.catalog.allTypes 
@@ -49,13 +47,13 @@ export const PropertyTypeFilters: React.FC = () => {
             <button
               key={cat.key}
               onClick={() => handleSelectType(cat.key)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold shrink-0 transition-all active:scale-95 shadow-sm ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-none text-xs font-semibold shrink-0 transition-all active:scale-95 border ${
                 isActive
-                  ? 'bg-brand-500 text-white shadow-brand-500/20'
-                  : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/60'
+                  ? 'bg-brand-500 text-white border-brand-600 shadow-xs'
+                  : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300'
               }`}
             >
-              <Icon className="w-4 h-4" />
+              <i className={`${cat.iconClass} text-xs`}></i>
               <span>{label}</span>
             </button>
           );

@@ -12,7 +12,6 @@ import { LoadingState } from '@/components/LoadingState';
 import { EmptyState } from '@/components/EmptyState';
 import { ErrorState } from '@/components/ErrorState';
 import { useLanguage } from '@/components/LanguageContext';
-import { SlidersHorizontal, X } from 'lucide-react';
 
 function LogementsContent() {
   const { t } = useLanguage();
@@ -66,7 +65,7 @@ function LogementsContent() {
       </div>
 
       {/* Main Catalog Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
           <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
             {t.catalog.title}
@@ -77,12 +76,12 @@ function LogementsContent() {
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Mobile Filter Toggle Button */}
+          {/* Mobile Filter Toggle Button (Square) */}
           <button
             onClick={() => setIsMobileFilterOpen(true)}
-            className="lg:hidden flex items-center gap-2 px-3 py-2 bg-white border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-700 shadow-sm"
+            className="lg:hidden flex items-center gap-2 px-3 py-2 bg-white border border-slate-300 rounded-none text-xs font-semibold text-slate-700 shadow-xs"
           >
-            <SlidersHorizontal className="w-4 h-4 text-brand-500" />
+            <i className="fa-solid fa-sliders text-brand-500 text-xs"></i>
             <span>{t.catalog.filters}</span>
           </button>
 
@@ -116,17 +115,17 @@ function LogementsContent() {
         </main>
       </div>
 
-      {/* Mobile Filters Drawer Modal */}
+      {/* Mobile Filters Drawer Modal (Square Borders) */}
       {isMobileFilterOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm lg:hidden flex justify-end">
-          <div className="w-full max-w-xs bg-white h-full overflow-y-auto p-5 space-y-4 shadow-2xl relative">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs lg:hidden flex justify-end">
+          <div className="w-full max-w-xs bg-white h-full overflow-y-auto p-5 space-y-4 shadow-2xl relative border-l border-slate-300">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
               <h3 className="font-bold text-slate-900 text-sm">{t.catalog.filters}</h3>
               <button
                 onClick={() => setIsMobileFilterOpen(false)}
                 className="p-1 text-slate-400 hover:text-slate-800"
               >
-                <X className="w-5 h-5" />
+                <i className="fa-solid fa-xmark text-base"></i>
               </button>
             </div>
             <FiltersPanel onCloseMobile={() => setIsMobileFilterOpen(false)} />

@@ -3,7 +3,6 @@
 import React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useLanguage } from './LanguageContext';
-import { ArrowUpDown } from 'lucide-react';
 
 export const SortMenu: React.FC = () => {
   const { t } = useLanguage();
@@ -18,8 +17,8 @@ export const SortMenu: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 bg-white border border-slate-200/80 px-3 py-2 rounded-xl shadow-sm">
-      <ArrowUpDown className="w-3.5 h-3.5 text-brand-500" />
+    <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 px-3 py-2 rounded-none shadow-xs">
+      <i className="fa-solid fa-arrow-down-wide-short text-brand-500 text-sm"></i>
       <span>{t.catalog.sort} :</span>
       <select
         value={currentOrdering}
