@@ -18,18 +18,6 @@
       }
     },
     {
-      "source": "/admin/(.*)",
-      "destination": {
-        "service": "backend"
-      }
-    },
-    {
-      "source": "/admin",
-      "destination": {
-        "service": "backend"
-      }
-    },
-    {
       "source": "/(.*)",
       "destination": {
         "service": "app"
