@@ -121,7 +121,7 @@ export const Header: React.FC = () => {
             }`}
           >
             <i className="fa-solid fa-circle-plus text-sm"></i>
-            <span>Publier une annonce</span>
+            <span>{t.nav.publishListing}</span>
           </Link>
         </nav>
 
@@ -316,7 +316,7 @@ export const Header: React.FC = () => {
                 : 'text-brand-600 bg-brand-50 font-bold hover:bg-brand-100'
             }`}
           >
-            + Publier une annonce
+            + {t.nav.publishListing}
           </Link>
 
           <div className="pt-2 border-t border-slate-200 flex flex-col gap-2">

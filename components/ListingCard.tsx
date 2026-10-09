@@ -31,7 +31,7 @@ export const ListingCard: React.FC<{ listing: LogementData }> = ({ listing }) =>
         />
         {/* Type Badge (Square) */}
         <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-none text-xs font-bold text-slate-800 shadow-xs border border-slate-200">
-          {listing.type_display || listing.type}
+          {t.propertyTypes[listing.type as keyof typeof t.propertyTypes] || listing.type_display || listing.type}
         </div>
         {/* Demo Badge (Square) */}
         <div className="absolute top-3 right-3 bg-amber-500 text-white px-2.5 py-0.5 rounded-none text-[10px] font-extrabold uppercase tracking-wider shadow-xs">

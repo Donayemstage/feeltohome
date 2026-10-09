@@ -1,22 +1,58 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState, use } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { fetchLogementBySlug } from '@/lib/api';
+import { fetchLogementBySlug, LogementData } from '@/lib/api';
 import { PropertyGallery } from '@/components/PropertyGallery';
 import { PropertyAmenities } from '@/components/PropertyAmenities';
 import { ReserveButton } from '@/components/ReserveButton';
+import { useLanguage } from '@/components/LanguageContext';
 
-export default async function LogementDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const logement = await fetchLogementBySlug(slug);
+export default function LogementDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = use(params);
+  const { t } = useLanguage();
 
-  if (!logement) {
-    notFound();
+  const [logement, setLogement] = useState<LogementData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    fetchLogementBySlug(slug)
+      .then((data) => {
+        if (data) setLogement(data);
+        else setError(true);
+      })
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-16 text-center space-y-3">
+        <div className="w-10 h-10 border-4 border-brand-500 border-t-transparent animate-spin mx-auto"></div>
+        <p className="text-xs text-slate-500 font-semibold">{t.states.loading}</p>
+      </div>
+    );
+  }
+
+  if (error || !logement) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-16 text-center space-y-4">
+        <h2 className="text-xl font-bold text-slate-900">{t.detail.notFoundTitle}</h2>
+        <p className="text-xs text-slate-500">{t.detail.notFoundDesc}</p>
+        <Link href="/logements" className="inline-block px-4 py-2 bg-brand-500 text-white font-bold text-xs">
+          {t.detail.backToListings}
+        </Link>
+      </div>
+    );
   }
 
   const numericPrice = typeof logement.prix_par_nuit === 'number'
     ? logement.prix_par_nuit
     : parseFloat(logement.prix_par_nuit);
+
+  const displayType = t.propertyTypes[logement.type as keyof typeof t.propertyTypes] || logement.type_display || logement.type;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 pb-24 md:pb-12">
@@ -27,7 +63,7 @@ export default async function LogementDetailPage({ params }: { params: Promise<{
           className="inline-flex items-center gap-2 text-xs font-bold text-slate-700 hover:text-brand-600 bg-white px-3.5 py-2 rounded-none border border-slate-300 shadow-xs transition-colors"
         >
           <i className="fa-solid fa-arrow-left text-xs"></i>
-          <span>Retour aux logements</span>
+          <span>{t.detail.backToListings}</span>
         </Link>
       </div>
 
@@ -35,10 +71,10 @@ export default async function LogementDetailPage({ params }: { params: Promise<{
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <span className="bg-brand-50 text-brand-700 text-xs font-bold px-3 py-1 rounded-none border border-brand-200">
-            {logement.type_display || logement.type}
+            {displayType}
           </span>
           <span className="bg-amber-500 text-white text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-none">
-            Démo
+            {t.catalog.demoBadge}
           </span>
         </div>
 
@@ -64,29 +100,29 @@ export default async function LogementDetailPage({ params }: { params: Promise<{
           <div className="bg-white p-5 rounded-none border border-slate-300 shadow-xs grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
             <div className="space-y-1">
               <i className="fa-solid fa-users text-brand-500 text-lg mx-auto block"></i>
-              <div className="text-sm font-bold text-slate-900">{logement.capacite} pers.</div>
+              <div className="text-sm font-bold text-slate-900">{logement.capacite} {t.detail.capacity}</div>
               <div className="text-[10px] text-slate-400 uppercase font-semibold">Capacité</div>
             </div>
             <div className="space-y-1">
               <i className="fa-solid fa-bed text-brand-500 text-lg mx-auto block"></i>
-              <div className="text-sm font-bold text-slate-900">{logement.nombre_chambres} ch.</div>
+              <div className="text-sm font-bold text-slate-900">{logement.nombre_chambres} {t.detail.bedrooms}</div>
               <div className="text-[10px] text-slate-400 uppercase font-semibold">Chambres</div>
             </div>
             <div className="space-y-1">
               <i className="fa-solid fa-bed text-brand-500 text-lg mx-auto block"></i>
-              <div className="text-sm font-bold text-slate-900">{logement.nombre_lits} lits</div>
+              <div className="text-sm font-bold text-slate-900">{logement.nombre_lits} {t.detail.beds}</div>
               <div className="text-[10px] text-slate-400 uppercase font-semibold">Couchages</div>
             </div>
             <div className="space-y-1">
               <i className="fa-solid fa-bath text-brand-500 text-lg mx-auto block"></i>
-              <div className="text-sm font-bold text-slate-900">{logement.nombre_salles_bain} sdb</div>
+              <div className="text-sm font-bold text-slate-900">{logement.nombre_salles_bain} {t.detail.bathrooms}</div>
               <div className="text-[10px] text-slate-400 uppercase font-semibold">Salles de bain</div>
             </div>
           </div>
 
           {/* Description Section */}
           <div className="bg-white p-6 rounded-none border border-slate-300 shadow-xs space-y-3">
-            <h3 className="text-base font-bold text-slate-900">À propos de ce logement</h3>
+            <h3 className="text-base font-bold text-slate-900">{t.detail.descriptionTitle}</h3>
             <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
               {logement.description}
             </p>
@@ -95,7 +131,7 @@ export default async function LogementDetailPage({ params }: { params: Promise<{
           {/* Dynamic Amenities Section */}
           {logement.equipements && logement.equipements.length > 0 && (
             <div className="bg-white p-6 rounded-none border border-slate-300 shadow-xs space-y-4">
-              <h3 className="text-base font-bold text-slate-900">Équipements disponibles</h3>
+              <h3 className="text-base font-bold text-slate-900">{t.detail.amenitiesTitle}</h3>
               <PropertyAmenities equipements={logement.equipements} />
             </div>
           )}
@@ -108,14 +144,14 @@ export default async function LogementDetailPage({ params }: { params: Promise<{
                   <i className="fa-solid fa-user-check text-base"></i>
                 </div>
                 <div>
-                  <span className="text-xs font-bold text-slate-400 uppercase">Hôte partenaire</span>
+                  <span className="text-xs font-bold text-slate-400 uppercase">{t.detail.hostTitle}</span>
                   <div className="text-sm font-bold text-slate-900">
                     {logement.proprietaire.prenom} {logement.proprietaire.nom}
                   </div>
                 </div>
               </div>
               <span className="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2.5 py-1 rounded-none border border-emerald-200 flex items-center gap-1.5">
-                <i className="fa-solid fa-shield-halved text-xs"></i> Compte vérifié
+                <i className="fa-solid fa-shield-halved text-xs"></i> {t.detail.verifiedAccount}
               </span>
             </div>
           )}
@@ -129,27 +165,29 @@ export default async function LogementDetailPage({ params }: { params: Promise<{
                 <span className="text-2xl font-extrabold text-brand-600">
                   {numericPrice.toLocaleString('fr-FR')} {logement.devise || 'XAF'}
                 </span>
-                <span className="text-xs text-slate-500 font-normal"> / nuit</span>
+                <span className="text-xs text-slate-500 font-normal"> {t.catalog.perNight}</span>
               </div>
             </div>
 
             <div className="bg-slate-50 p-4 rounded-none space-y-3 text-xs border border-slate-200">
               <div className="flex items-center gap-2 text-slate-700">
                 <i className="fa-solid fa-calendar-check text-brand-500 text-sm"></i>
-                <span>Sélection des dates et voyageurs lors de l'étape suivante</span>
+                <span>{t.detail.reservationNote}</span>
               </div>
             </div>
 
-            {/* CTA Reservation Button */}
+            {/* CTA Reservation Button with Modal */}
             <ReserveButton
               propertyName={logement.nom}
-              className="w-full py-3.5 bg-brand-500 hover:bg-brand-600 active:scale-98 text-white font-bold text-sm rounded-none shadow-sm transition-all flex items-center justify-center gap-2 border border-brand-600"
+              price={numericPrice}
+              currency={logement.devise || 'XAF'}
+              className="w-full py-3.5 bg-brand-500 hover:bg-brand-600 active:scale-98 text-white font-bold text-sm rounded-none shadow-sm transition-all flex items-center justify-center gap-2 border border-brand-600 cursor-pointer"
             >
-              <span>Réserver maintenant</span>
+              <span>{t.detail.reserveNow}</span>
             </ReserveButton>
 
             <p className="text-[11px] text-slate-400 text-center">
-              Aucun montant ne sera débité à cette étape.
+              {t.detail.noChargeNote}
             </p>
           </div>
         </div>
@@ -161,14 +199,16 @@ export default async function LogementDetailPage({ params }: { params: Promise<{
           <span className="text-lg font-extrabold text-brand-600">
             {numericPrice.toLocaleString('fr-FR')} {logement.devise || 'XAF'}
           </span>
-          <span className="text-xs text-slate-500 font-normal"> / nuit</span>
+          <span className="text-xs text-slate-500 font-normal"> {t.catalog.perNight}</span>
         </div>
 
         <ReserveButton
           propertyName={logement.nom}
-          className="px-5 py-2.5 bg-brand-500 text-white font-bold text-xs rounded-none shadow-xs active:scale-95 transition-all border border-brand-600"
+          price={numericPrice}
+          currency={logement.devise || 'XAF'}
+          className="px-5 py-2.5 bg-brand-500 text-white font-bold text-xs rounded-none shadow-xs active:scale-95 transition-all border border-brand-600 cursor-pointer"
         >
-          Réserver maintenant
+          {t.detail.reserveNow}
         </ReserveButton>
       </div>
     </div>
