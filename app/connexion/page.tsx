@@ -2,18 +2,52 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/components/LanguageContext';
 
 export default function ConnexionPage() {
   const { t } = useLanguage();
+  const router = useRouter();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [notice, setNotice] = useState(false);
+  const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setNotice(true);
+    setLoading(true);
+    setStatusMsg(null);
+
+    const identifier = email.trim().toLowerCase();
+
+    setTimeout(() => {
+      setLoading(false);
+      // Check Admin credentials
+      if ((identifier === 'donayen' || identifier === 'donayem' || identifier === 'admin' || identifier === 'admin@feeltohome.cm') && password === 'Donayem12#@') {
+        setStatusMsg({
+          type: 'success',
+          text: 'Connexion Administrateur réussie ! Redirection vers le Tableau de Bord Admin...',
+        });
+        setTimeout(() => {
+          router.push('/admin');
+        }, 1200);
+      } else if (email && password) {
+        // Standard user demo login
+        setStatusMsg({
+          type: 'success',
+          text: 'Connexion réussie ! Bienvenue sur FeelToHome.',
+        });
+        setTimeout(() => {
+          router.push('/');
+        }, 1500);
+      } else {
+        setStatusMsg({
+          type: 'error',
+          text: 'Veuillez saisir votre identifiant et mot de passe.',
+        });
+      }
+    }, 600);
   };
 
   return (
@@ -33,18 +67,36 @@ export default function ConnexionPage() {
           </p>
         </div>
 
-        {/* Info Banner */}
-        {notice && (
-          <div className="p-4 rounded-none bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-start gap-3">
-            <i className="fa-solid fa-circle-info text-amber-600 text-base shrink-0 mt-0.5"></i>
+        {/* Dynamic Status / Success / Error Banner */}
+        {statusMsg && (
+          <div
+            className={`p-4 rounded-none border text-xs flex items-start gap-3 ${
+              statusMsg.type === 'success'
+                ? 'bg-emerald-50 border-emerald-300 text-emerald-900 font-bold'
+                : 'bg-red-50 border-red-300 text-red-900 font-bold'
+            }`}
+          >
+            <i
+              className={`fa-solid ${
+                statusMsg.type === 'success' ? 'fa-circle-check text-emerald-600' : 'fa-triangle-exclamation text-red-600'
+              } text-base shrink-0 mt-0.5`}
+            ></i>
             <div>
-              <span className="font-bold">{t.authPage.loginNoticeTitle}</span>
-              <p className="mt-0.5 text-amber-700">
-                {t.authPage.loginNoticeDesc}
-              </p>
+              <span>{statusMsg.text}</span>
             </div>
           </div>
         )}
+
+        {/* Quick Admin Helper Badge */}
+        <div className="bg-slate-100 p-3 border border-slate-200 text-[11px] text-slate-600 space-y-1">
+          <div className="font-bold text-slate-800 flex items-center gap-1.5">
+            <i className="fa-solid fa-user-shield text-brand-600"></i>
+            <span>Connexion Administrateur :</span>
+          </div>
+          <p>
+            Entrez <strong>Donayen</strong> (ou <strong>Donayem</strong>) avec le mot de passe <strong>Donayem12#@</strong> pour être redirigé directement vers le Tableau de bord Admin.
+          </p>
+        </div>
 
         {/* Connexion Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
