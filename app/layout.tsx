@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: 'FeelToHome — Trouvez votre chez-vous au Cameroun',
   description: 'Plateforme web de réservation de logements au Cameroun. Réservez des hôtels, appartements meublés, studios, résidences, villas et auberges à Douala, Yaoundé, Kribi et Limbe.',
   keywords: ['FeelToHome', 'réservation logement Cameroun', 'appartement meublé Douala', 'hôtel Yaoundé', 'villa Kribi', 'studio meublé'],
-  authors: [{ name: 'Donayem Tech', url: 'https://www.donayemtech.com/fr' }],
+  authors: [{ name: 'FeelToHome', url: 'https://feeltohome.com' }],
   openGraph: {
     title: 'FeelToHome — Trouvez votre chez-vous au Cameroun',
     description: 'Plateforme de réservation de logements d\'exception au Cameroun.',

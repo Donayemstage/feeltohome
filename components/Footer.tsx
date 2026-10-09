@@ -34,8 +34,8 @@ export const Footer: React.FC = () => {
               </p>
               <p className="flex items-center gap-2">
                 <i className="fa-solid fa-envelope text-brand-500 shrink-0"></i>
-                <a href="mailto:donayem.digital@gmail.com" className="hover:text-white transition-colors">
-                  donayem.digital@gmail.com
+                <a href="mailto:contact@feeltohome.com" className="hover:text-white transition-colors">
+                  contact@feeltohome.com
                 </a>
               </p>
               <p className="flex items-start gap-2">
@@ -108,18 +108,6 @@ export const Footer: React.FC = () => {
         {/* Bottom Copyright */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-3">
           <p>© {currentYear} FeelToHome (feeltohome.com). {t.footer.rights}</p>
-
-          <p className="font-medium text-slate-300">
-            {t.footer.realizedBy}{' '}
-            <a
-              href="https://donayem.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-brand-500 hover:text-brand-400 font-bold underline underline-offset-4 decoration-brand-500/50 hover:decoration-brand-400 transition-all"
-            >
-              Donayem Tech
-            </a>
-          </p>
         </div>
       </div>
     </footer>

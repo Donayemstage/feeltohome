@@ -110,7 +110,7 @@ export default function ContactPage() {
                 </p>
                 <p className="font-medium flex items-center gap-2">
                   <i className="fa-solid fa-envelope text-brand-500 shrink-0"></i>
-                  <span><strong>{t.contactPage.emailLabel}</strong> <a href="mailto:donayem.digital@gmail.com" className="text-brand-600 hover:underline">donayem.digital@gmail.com</a></span>
+                  <span><strong>{t.contactPage.emailLabel}</strong> <a href="mailto:contact@feeltohome.com" className="text-brand-600 hover:underline">contact@feeltohome.com</a></span>
                 </p>
               </div>
             </div>

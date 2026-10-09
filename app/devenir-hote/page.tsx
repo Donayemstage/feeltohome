@@ -175,7 +175,7 @@ export default function DevenirHotePage() {
                   <span>Activation de votre Espace Hôte Partenaire :</span>
                 </div>
                 <p className="text-slate-600">
-                  1. Un conseiller <strong>Donayem Tech</strong> vérifie vos coordonnées (contact direct sous 24h au <strong>{hostForm.telephone}</strong>).<br />
+                  1. Un conseiller <strong>FeelToHome</strong> vérifie vos coordonnées (contact direct sous 24h au <strong>{hostForm.telephone}</strong>).<br />
                   2. Une fois votre compte validé, vous accédez à votre <strong>Tableau de Bord Propriétaire personnel</strong> pour ajouter, modifier vos photos et suivre vos réservations en temps réel.
                 </p>
               </div>

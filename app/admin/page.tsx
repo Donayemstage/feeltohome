@@ -173,7 +173,7 @@ export default function AdminDashboardPage() {
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <span className="bg-brand-500 text-white text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-none border border-brand-400">
-                  Administration Donayem Tech
+                  Administration FeelToHome
                 </span>
                 <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-none border border-emerald-500/30 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
