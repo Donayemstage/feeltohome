@@ -30,6 +30,19 @@ export default function AdminDashboardPage() {
   const [newDescription, setNewDescription] = useState('');
   const [newPhoto, setNewPhoto] = useState('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80');
 
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          setNewPhoto(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAddLogementSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newNom.trim()) return;
@@ -659,18 +672,56 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              {/* Photo URL */}
-              <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  URL de la Photo Principale HD
+              {/* Photo Import (File from device OR URL) */}
+              <div className="space-y-2">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  Photo Principale du Logement *
                 </label>
-                <input
-                  type="url"
-                  value={newPhoto}
-                  onChange={(e) => setNewPhoto(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full px-3.5 py-2.5 text-xs rounded-none border border-slate-300 bg-slate-50 focus:outline-none focus:border-brand-500 font-mono text-slate-600"
-                />
+                
+                {/* File Upload Button (Device/Phone/Computer) */}
+                <div className="p-4 bg-slate-50 border border-slate-300 space-y-2">
+                  <label className="w-full px-4 py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-none cursor-pointer flex items-center justify-center gap-2 transition-all shadow-xs active:scale-98">
+                    <i className="fa-solid fa-cloud-arrow-up text-brand-400 text-base"></i>
+                    <span>Importer une Photo depuis votre appareil (PC / Téléphone)</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageFileChange}
+                      className="hidden"
+                    />
+                  </label>
+                  <p className="text-[11px] text-slate-500 text-center font-medium">
+                    Sélectionnez directement une photo enregistrée dans vos documents, votre galerie ou prenez une photo.
+                  </p>
+                </div>
+
+                <div className="pt-1">
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+                    Ou collez le lien d'une photo en ligne (URL) :
+                  </label>
+                  <input
+                    type="text"
+                    value={newPhoto}
+                    onChange={(e) => setNewPhoto(e.target.value)}
+                    placeholder="https://..."
+                    className="w-full px-3.5 py-2.5 text-xs rounded-none border border-slate-300 bg-white focus:outline-none focus:border-brand-500 font-mono text-slate-600"
+                  />
+                </div>
+
+                {/* Photo Preview */}
+                {newPhoto && (
+                  <div className="relative pt-2">
+                    <div className="text-[10px] font-bold uppercase text-slate-500 mb-1 flex items-center justify-between">
+                      <span>Aperçu de la photo sélectionnée :</span>
+                      <span className="text-emerald-600 font-bold">✓ Prête pour publication</span>
+                    </div>
+                    <img
+                      src={newPhoto}
+                      alt="Aperçu du logement"
+                      className="w-full h-44 object-cover border border-slate-300 rounded-none shadow-xs"
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Description */}
