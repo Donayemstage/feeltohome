@@ -179,9 +179,10 @@ export default function InscriptionPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-700 cursor-pointer"
+                  className="absolute inset-y-0 right-0 px-2.5 flex items-center gap-1 text-slate-500 hover:text-brand-600 cursor-pointer z-10 select-none"
                 >
-                  <i className={`fa-solid ${showPassword ? 'fa-eye-slash text-brand-600' : 'fa-eye'}`}></i>
+                  <i className={`fa-solid ${showPassword ? 'fa-eye-slash text-brand-600 text-xs' : 'fa-eye text-slate-400 text-xs'}`}></i>
+                  <span className="text-[10px] font-bold uppercase text-slate-600 hover:text-brand-600">{showPassword ? 'Masquer' : 'Afficher'}</span>
                 </button>
               </div>
             </div>
@@ -197,14 +198,15 @@ export default function InscriptionPage() {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className="w-full pl-3.5 pr-10 py-2.5 text-sm rounded-none border border-slate-300 focus:outline-none focus:border-brand-500 bg-slate-50 font-semibold text-slate-800"
+                  className="w-full pl-3.5 pr-20 py-2.5 text-sm rounded-none border border-slate-300 focus:outline-none focus:border-brand-500 bg-slate-50 font-semibold text-slate-800"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-700 cursor-pointer"
+                  className="absolute inset-y-0 right-0 px-2.5 flex items-center gap-1 text-slate-500 hover:text-brand-600 cursor-pointer z-10 select-none"
                 >
-                  <i className={`fa-solid ${showPassword ? 'fa-eye-slash text-brand-600' : 'fa-eye'}`}></i>
+                  <i className={`fa-solid ${showPassword ? 'fa-eye-slash text-brand-600 text-xs' : 'fa-eye text-slate-400 text-xs'}`}></i>
+                  <span className="text-[10px] font-bold uppercase text-slate-600 hover:text-brand-600">{showPassword ? 'Masquer' : 'Afficher'}</span>
                 </button>
               </div>
             </div>

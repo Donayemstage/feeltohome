@@ -147,10 +147,11 @@ export default function ConnexionPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-700 cursor-pointer"
+                className="absolute inset-y-0 right-0 px-3 flex items-center gap-1.5 text-slate-500 hover:text-brand-600 cursor-pointer z-10 select-none"
                 title={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
               >
-                <i className={`fa-solid ${showPassword ? 'fa-eye-slash text-brand-600' : 'fa-eye'}`}></i>
+                <i className={`fa-solid ${showPassword ? 'fa-eye-slash text-brand-600 text-sm' : 'fa-eye text-slate-400 text-sm'}`}></i>
+                <span className="text-[11px] font-bold uppercase text-slate-600 hover:text-brand-600">{showPassword ? 'Masquer' : 'Afficher'}</span>
               </button>
             </div>
           </div>
