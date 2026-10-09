@@ -2,8 +2,11 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useLanguage } from '@/components/LanguageContext';
 
 export default function InscriptionPage() {
+  const { t } = useLanguage();
+
   const [formData, setFormData] = useState({
     prenom: '',
     nom: '',
@@ -35,10 +38,10 @@ export default function InscriptionPage() {
             <i className="fa-solid fa-user-plus text-xl"></i>
           </div>
           <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-            Créer un compte
+            {t.authPage.registerTitle}
           </h1>
           <p className="text-xs text-slate-500">
-            Rejoignez la communauté FeelToHome au Cameroun
+            {t.authPage.registerSubtitle}
           </p>
         </div>
 
@@ -47,15 +50,15 @@ export default function InscriptionPage() {
           <div className="p-4 rounded-none bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-start gap-3">
             <i className="fa-solid fa-circle-info text-amber-600 text-base shrink-0 mt-0.5"></i>
             <div>
-              <span className="font-bold">Fonctionnalité en déploiement :</span>
+              <span className="font-bold">{t.authPage.registerNoticeTitle}</span>
               <p className="mt-0.5 text-amber-700">
-                La création automatique de compte profilé sera activée sous peu. Vos coordonnées ont été pré-enregistrées.
+                {t.authPage.registerNoticeDesc}
               </p>
             </div>
           </div>
         )}
 
-        {/* Role Selector Tabs (Square Borders) */}
+        {/* Role Selector Tabs */}
         <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-none border border-slate-200">
           <button
             type="button"
@@ -67,7 +70,7 @@ export default function InscriptionPage() {
             }`}
           >
             <i className="fa-solid fa-user text-xs"></i>
-            <span>Voyageur / Client</span>
+            <span>{t.authPage.clientRole}</span>
           </button>
           <button
             type="button"
@@ -79,16 +82,16 @@ export default function InscriptionPage() {
             }`}
           >
             <i className="fa-solid fa-house-chimney text-xs"></i>
-            <span>Hôte / Propriétaire</span>
+            <span>{t.authPage.hostRole}</span>
           </button>
         </div>
 
-        {/* Form Fields (Square Borders) */}
+        {/* Form Fields */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Prénom *
+                {t.authPage.firstNameLabel}
               </label>
               <input
                 type="text"
@@ -102,7 +105,7 @@ export default function InscriptionPage() {
             </div>
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Nom *
+                {t.authPage.lastNameLabel}
               </label>
               <input
                 type="text"
@@ -119,7 +122,7 @@ export default function InscriptionPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Numéro WhatsApp / Tél *
+                {t.authPage.whatsappLabel}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -139,7 +142,7 @@ export default function InscriptionPage() {
 
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Adresse e-mail
+                {t.contactPage.emailLabelInput}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -160,7 +163,7 @@ export default function InscriptionPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Mot de passe *
+                {t.authPage.passwordLabel}
               </label>
               <input
                 type="password"
@@ -174,7 +177,7 @@ export default function InscriptionPage() {
             </div>
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Confirmer mot de passe *
+                {t.authPage.confirmPasswordLabel}
               </label>
               <input
                 type="password"
@@ -193,14 +196,14 @@ export default function InscriptionPage() {
             className="w-full py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs rounded-none shadow-xs transition-all flex items-center justify-center gap-2 border border-brand-600 active:scale-98 mt-2"
           >
             <i className="fa-solid fa-user-plus text-xs"></i>
-            <span>S'inscrire sur FeelToHome</span>
+            <span>{t.authPage.registerSubmitBtn}</span>
           </button>
         </form>
 
         <div className="text-center pt-4 border-t border-slate-200 text-xs text-slate-600">
-          <span>Vous avez déjà un compte ? </span>
+          <span>{t.authPage.alreadyHaveAccount} </span>
           <Link href="/connexion" className="font-bold text-brand-600 hover:underline">
-            Se connecter
+            {t.nav.login}
           </Link>
         </div>
 

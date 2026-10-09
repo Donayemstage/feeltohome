@@ -1,8 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useLanguage } from '@/components/LanguageContext';
 
 export default function ContactPage() {
+  const { t } = useLanguage();
+
   const [formData, setFormData] = useState({
     nom: '',
     email: '',
@@ -32,13 +35,13 @@ export default function ContactPage() {
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-none bg-brand-500/20 text-brand-300 border border-brand-500/30 text-xs font-bold uppercase tracking-wider mb-4">
               <i className="fa-solid fa-wand-magic-sparkles text-brand-400 text-sm"></i>
-              <span>Assistance & Contact</span>
+              <span>{t.contactPage.tag}</span>
             </span>
             <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-              Contactez l'Équipe FeelToHome
+              {t.contactPage.title}
             </h1>
             <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed">
-              Une question sur une réservation, un logement ou une demande de partenariat ? Nos conseillers basés à Douala sont à votre écoute 7j/7.
+              {t.contactPage.subtitle}
             </p>
           </div>
         </div>
@@ -58,8 +61,8 @@ export default function ContactPage() {
                   <i className="fa-solid fa-phone text-base"></i>
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm">Téléphones & WhatsApp</h3>
-                  <p className="text-[11px] text-slate-500">Lignes directes réactives</p>
+                  <h3 className="font-bold text-sm">{t.contactPage.phoneTitle}</h3>
+                  <p className="text-[11px] text-slate-500">{t.contactPage.phoneDesc}</p>
                 </div>
               </div>
 
@@ -106,7 +109,7 @@ export default function ContactPage() {
                   <i className="fa-solid fa-location-dot text-base"></i>
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm text-slate-900">Localisation du Siège</h3>
+                  <h3 className="font-bold text-sm text-slate-900">{t.contactPage.locationTitle}</h3>
                   <p className="text-[11px] text-slate-500">Douala, Cameroun</p>
                 </div>
               </div>
@@ -114,21 +117,20 @@ export default function ContactPage() {
               <div className="text-xs text-slate-600 space-y-2 pt-2 border-t border-slate-200">
                 <p className="font-medium flex items-start gap-2">
                   <i className="fa-solid fa-location-dot text-brand-500 shrink-0 mt-0.5"></i>
-                  <span><strong>Adresse :</strong> Ange Raphaël, Hôtel Le Select — Douala</span>
+                  <span><strong>{t.contactPage.addressLabel}</strong> Ange Raphaël, Hôtel Le Select — Douala</span>
                 </p>
                 <p className="font-medium flex items-center gap-2">
                   <i className="fa-solid fa-envelope text-brand-500 shrink-0"></i>
-                  <span><strong>Email :</strong> <a href="mailto:donayem.digital@gmail.com" className="text-brand-600 hover:underline">donayem.digital@gmail.com</a></span>
+                  <span><strong>{t.contactPage.emailLabel}</strong> <a href="mailto:donayem.digital@gmail.com" className="text-brand-600 hover:underline">donayem.digital@gmail.com</a></span>
                 </p>
               </div>
             </div>
 
             {/* Official Social Media Links Box */}
             <div className="bg-slate-900 text-white p-6 rounded-none shadow-xs border border-slate-800 space-y-4">
-              <h3 className="font-bold text-sm">Suivez-nous sur les Réseaux</h3>
+              <h3 className="font-bold text-sm">{t.contactPage.socialTitle}</h3>
               
               <div className="space-y-2.5">
-                {/* Facebook */}
                 <a
                   href="https://www.facebook.com/profile.php?id=61593313402128&mibextid=rS40aB7S9Ucbxw6v"
                   target="_blank"
@@ -137,12 +139,11 @@ export default function ContactPage() {
                 >
                   <i className="fa-brands fa-facebook text-lg text-blue-400"></i>
                   <div>
-                    <p className="font-bold">Facebook Officiel</p>
+                    <p className="font-bold">{t.contactPage.facebookTitle}</p>
                     <p className="text-[10px] text-slate-400">FeelToHome / Donayem Tech</p>
                   </div>
                 </a>
 
-                {/* Google Website */}
                 <a
                   href="https://donayem.com"
                   target="_blank"
@@ -151,16 +152,15 @@ export default function ContactPage() {
                 >
                   <i className="fa-brands fa-google text-lg text-emerald-400"></i>
                   <div>
-                    <p className="font-bold">Site Web Google (donayem.com)</p>
+                    <p className="font-bold">{t.contactPage.googleTitle}</p>
                     <p className="text-[10px] text-slate-400">Portail Officiel Donayem</p>
                   </div>
                 </a>
 
-                {/* TikTok */}
                 <div className="flex items-center gap-3 p-3 rounded-none bg-white/10 border border-white/10 text-xs font-semibold">
                   <i className="fa-brands fa-tiktok text-lg text-pink-400"></i>
                   <div>
-                    <p className="font-bold">TikTok Officiel</p>
+                    <p className="font-bold">{t.contactPage.tiktokTitle}</p>
                     <p className="text-[10px] text-brand-300 font-bold">Donayem Tech</p>
                   </div>
                 </div>
@@ -170,7 +170,7 @@ export default function ContactPage() {
 
             {/* Modes de paiement */}
             <div className="bg-white p-6 rounded-none border border-slate-300 shadow-xs space-y-3">
-              <h4 className="font-bold text-xs uppercase text-slate-400 tracking-wider">Modes de Paiement Acceptés</h4>
+              <h4 className="font-bold text-xs uppercase text-slate-400 tracking-wider">{t.contactPage.paymentsTitle}</h4>
               <div className="grid grid-cols-2 gap-2 text-[11px] font-bold text-slate-800">
                 <div className="p-2.5 rounded-none bg-orange-50 text-orange-700 border border-orange-200 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-none bg-orange-500"></span>
@@ -193,14 +193,14 @@ export default function ContactPage() {
 
           </div>
 
-          {/* Right Column: Interactive Contact Form (Square Borders everywhere) */}
+          {/* Right Column: Interactive Contact Form */}
           <div className="lg:col-span-2">
             <div className="bg-white p-8 sm:p-10 rounded-none border border-slate-300 shadow-xs">
               
               <div className="border-b border-slate-200 pb-6 mb-6">
-                <h2 className="text-2xl font-bold text-slate-900">Envoyez-nous un Message</h2>
+                <h2 className="text-2xl font-bold text-slate-900">{t.contactPage.formTitle}</h2>
                 <p className="text-xs text-slate-500 mt-1">
-                  Remplissez ce formulaire et notre équipe à Douala vous répondra sous 30 minutes.
+                  {t.contactPage.formSubtitle}
                 </p>
               </div>
 
@@ -209,15 +209,15 @@ export default function ContactPage() {
                   <div className="w-12 h-12 bg-emerald-500 text-white rounded-none flex items-center justify-center mx-auto shadow-xs">
                     <i className="fa-solid fa-check text-xl"></i>
                   </div>
-                  <h3 className="text-lg font-bold text-emerald-900">Message Envoyé avec Succès !</h3>
+                  <h3 className="text-lg font-bold text-emerald-900">{t.contactPage.successTitle}</h3>
                   <p className="text-xs text-emerald-700 max-w-md mx-auto leading-relaxed">
-                    Merci d'avoir contacté FeelToHome. Un conseiller client vous recontactera très rapidement par téléphone ou e-mail.
+                    {t.contactPage.successDesc}
                   </p>
                   <button
                     onClick={() => setSubmitted(false)}
                     className="mt-4 px-5 py-2.5 bg-emerald-600 text-white font-bold text-xs rounded-none hover:bg-emerald-700 transition-colors border border-emerald-700"
                   >
-                    Envoyer un autre message
+                    {t.contactPage.sendAnotherBtn}
                   </button>
                 </div>
               ) : (
@@ -225,7 +225,7 @@ export default function ContactPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                       <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                        Nom complet *
+                        {t.contactPage.fullNameLabel}
                       </label>
                       <input
                         type="text"
@@ -239,7 +239,7 @@ export default function ContactPage() {
 
                     <div>
                       <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                        Numéro de téléphone *
+                        {t.contactPage.phoneLabel}
                       </label>
                       <input
                         type="tel"
@@ -255,7 +255,7 @@ export default function ContactPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                       <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                        Adresse e-mail
+                        {t.contactPage.emailLabelInput}
                       </label>
                       <input
                         type="email"
@@ -268,29 +268,29 @@ export default function ContactPage() {
 
                     <div>
                       <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                        Objet de votre demande
+                        {t.contactPage.subjectLabel}
                       </label>
                       <select
                         value={formData.sujet}
                         onChange={(e) => setFormData({ ...formData, sujet: e.target.value })}
                         className="w-full px-4 py-3 text-sm rounded-none border border-slate-300 focus:outline-none focus:border-brand-500 bg-slate-50 font-bold text-slate-800 cursor-pointer"
                       >
-                        <option value="RESERVATION">Réservation d'un logement</option>
-                        <option value="HOTE">Devenir Hôte / Publier un logement</option>
-                        <option value="PAIEMENT">Question sur un paiement (OM / MoMo)</option>
-                        <option value="AUTRE">Autre demande</option>
+                        <option value="RESERVATION">{t.contactPage.subjectOption1}</option>
+                        <option value="HOTE">{t.contactPage.subjectOption2}</option>
+                        <option value="PAIEMENT">{t.contactPage.subjectOption3}</option>
+                        <option value="AUTRE">{t.contactPage.subjectOption4}</option>
                       </select>
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                      Votre Message *
+                      {t.contactPage.messageLabel}
                     </label>
                     <textarea
                       required
                       rows={5}
-                      placeholder="Précisez votre demande, les dates souhaitées ou la ville..."
+                      placeholder="..."
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       className="w-full px-4 py-3 text-sm rounded-none border border-slate-300 focus:outline-none focus:border-brand-500 bg-slate-50 resize-none font-semibold text-slate-800"
@@ -303,11 +303,11 @@ export default function ContactPage() {
                     className="w-full py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold text-sm rounded-none shadow-xs transition-all flex items-center justify-center gap-2 active:scale-98 disabled:opacity-50 border border-brand-600"
                   >
                     {loading ? (
-                      <span>Envoi en cours...</span>
+                      <span>{t.contactPage.sendingBtn}</span>
                     ) : (
                       <>
                         <i className="fa-solid fa-paper-plane text-sm"></i>
-                        <span>Envoyer le Message</span>
+                        <span>{t.contactPage.submitBtn}</span>
                       </>
                     )}
                   </button>

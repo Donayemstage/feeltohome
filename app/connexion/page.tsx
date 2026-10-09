@@ -2,8 +2,11 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useLanguage } from '@/components/LanguageContext';
 
 export default function ConnexionPage() {
+  const { t } = useLanguage();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [notice, setNotice] = useState(false);
@@ -23,31 +26,31 @@ export default function ConnexionPage() {
             <i className="fa-solid fa-house-chimney text-xl"></i>
           </div>
           <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-            Connexion
+            {t.authPage.loginTitle}
           </h1>
           <p className="text-xs text-slate-500">
-            Accédez à votre espace FeelToHome
+            {t.authPage.loginSubtitle}
           </p>
         </div>
 
-        {/* Info Banner for Phase 1 */}
+        {/* Info Banner */}
         {notice && (
           <div className="p-4 rounded-none bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-start gap-3">
             <i className="fa-solid fa-circle-info text-amber-600 text-base shrink-0 mt-0.5"></i>
             <div>
-              <span className="font-bold">Fonctionnalité bientôt disponible :</span>
+              <span className="font-bold">{t.authPage.loginNoticeTitle}</span>
               <p className="mt-0.5 text-amber-700">
-                La connexion par identifiants uniques sera active lors de la mise en production officielle des comptes utilisateurs.
+                {t.authPage.loginNoticeDesc}
               </p>
             </div>
           </div>
         )}
 
-        {/* Connexion Form (Square Borders) */}
+        {/* Connexion Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-              Adresse e-mail ou téléphone
+              {t.authPage.emailOrPhoneLabel}
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -58,7 +61,7 @@ export default function ConnexionPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="votre.email@exemple.com ou 696..."
+                placeholder="votre.email@exemple.com"
                 className="w-full pl-10 pr-4 py-3 text-sm rounded-none border border-slate-300 focus:outline-none focus:border-brand-500 bg-slate-50 font-semibold text-slate-800"
               />
             </div>
@@ -67,10 +70,10 @@ export default function ConnexionPage() {
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                Mot de passe
+                {t.authPage.passwordLabel}
               </label>
               <a href="#" className="text-[11px] font-semibold text-brand-600 hover:underline">
-                Oublié ?
+                {t.authPage.forgotPassword}
               </a>
             </div>
             <div className="relative">
@@ -93,14 +96,14 @@ export default function ConnexionPage() {
             className="w-full py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs rounded-none shadow-xs transition-all flex items-center justify-center gap-2 border border-brand-600 active:scale-98"
           >
             <i className="fa-solid fa-right-to-bracket text-xs"></i>
-            <span>Se connecter</span>
+            <span>{t.authPage.loginSubmitBtn}</span>
           </button>
         </form>
 
         <div className="text-center pt-4 border-t border-slate-200 text-xs text-slate-600">
-          <span>Vous n'avez pas encore de compte ? </span>
+          <span>{t.authPage.noAccountYet} </span>
           <Link href="/inscription" className="font-bold text-brand-600 hover:underline">
-            S'inscrire gratuitement
+            {t.authPage.registerFreeLink}
           </Link>
         </div>
 
