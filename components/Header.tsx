@@ -123,6 +123,18 @@ export const Header: React.FC = () => {
             <i className="fa-solid fa-circle-plus text-sm"></i>
             <span>{t.nav.publishListing}</span>
           </Link>
+
+          <Link
+            href="/admin"
+            className={`px-3.5 py-1.5 rounded-xl transition-all font-bold flex items-center gap-1.5 ${
+              isActive('/admin')
+                ? 'bg-slate-900 text-white font-bold shadow-sm'
+                : 'text-slate-900 hover:bg-slate-900 hover:text-white bg-slate-100 border border-slate-300'
+            }`}
+          >
+            <i className="fa-solid fa-user-shield text-sm text-brand-500"></i>
+            <span>Admin</span>
+          </Link>
         </nav>
 
         {/* Right Action Menu (Desktop) */}
@@ -317,6 +329,17 @@ export const Header: React.FC = () => {
             }`}
           >
             + {t.nav.publishListing}
+          </Link>
+          <Link
+            href="/admin"
+            onClick={() => setIsMenuOpen(false)}
+            className={`block px-3.5 py-2 text-sm rounded-xl transition-all font-bold ${
+              isActive('/admin')
+                ? 'bg-slate-900 text-white font-bold'
+                : 'text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200'
+            }`}
+          >
+            🛡️ Espace Admin
           </Link>
 
           <div className="pt-2 border-t border-slate-200 flex flex-col gap-2">

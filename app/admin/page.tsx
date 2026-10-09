@@ -13,6 +13,63 @@ export default function AdminDashboardPage() {
   const [equipments, setEquipments] = useState<EquipementData[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Modal and notification state
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  // New Listing Form State
+  const [newNom, setNewNom] = useState('');
+  const [newType, setNewType] = useState('APPARTEMENT');
+  const [newVille, setNewVille] = useState('Douala');
+  const [newQuartier, setNewQuartier] = useState('');
+  const [newPrix, setNewPrix] = useState('35000');
+  const [newCapacite, setNewCapacite] = useState('4');
+  const [newChambres, setNewChambres] = useState('2');
+  const [newLits, setNewLits] = useState('2');
+  const [newSallesBain, setNewSallesBain] = useState('1');
+  const [newDescription, setNewDescription] = useState('');
+  const [newPhoto, setNewPhoto] = useState('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80');
+
+  const handleAddLogementSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newNom.trim()) return;
+
+    const newListing: LogementData = {
+      id: Date.now(),
+      slug: newNom.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now().toString().slice(-4),
+      nom: newNom,
+      type: newType,
+      type_display: newType === 'APPARTEMENT' ? 'Appartement meublé' : newType === 'VILLA' ? 'Villa de luxe' : newType === 'HOTEL' ? 'Hôtel' : newType === 'STUDIO' ? 'Studio meublé' : newType === 'AUBERGE' ? 'Auberge' : 'Résidence',
+      ville: newVille,
+      quartier: newQuartier || 'Centre-ville',
+      adresse: `${newQuartier || 'Centre-ville'}, ${newVille}`,
+      prix_par_nuit: parseFloat(newPrix) || 35000,
+      devise: 'FCFA',
+      capacite: parseInt(newCapacite) || 2,
+      nombre_chambres: parseInt(newChambres) || 1,
+      nombre_lits: parseInt(newLits) || 1,
+      nombre_salles_bain: parseInt(newSallesBain) || 1,
+      statut: 'DISPONIBLE',
+      statut_display: 'Disponible',
+      description: newDescription || 'Magnifique logement meublé avec toutes les commodités disponible à la réservation sur FeelToHome.',
+      photos: [
+        { id: Date.now(), url: newPhoto.trim() || 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80', ordre: 1, image_principale: true }
+      ],
+      equipements: [],
+      date_creation: new Date().toISOString(),
+    };
+
+    setLogements((prev) => [newListing, ...prev]);
+    setSuccessMsg(`Logement "${newNom}" ajouté avec succès au catalogue !`);
+    setIsAddModalOpen(false);
+
+    // Reset Form
+    setNewNom('');
+    setNewQuartier('');
+    setNewDescription('');
+    setTimeout(() => setSuccessMsg(null), 6000);
+  };
+
   // Mock Host applications submitted via /devenir-hote
   const [hostApplications, setHostApplications] = useState([
     {
@@ -216,6 +273,19 @@ export default function AdminDashboardPage() {
           </button>
         </div>
 
+        {/* Success Alert Banner */}
+        {successMsg && (
+          <div className="bg-emerald-50 border border-emerald-300 text-emerald-900 p-4 rounded-none text-xs font-bold flex items-center justify-between shadow-xs">
+            <div className="flex items-center gap-2">
+              <i className="fa-solid fa-circle-check text-emerald-600 text-base"></i>
+              <span>{successMsg}</span>
+            </div>
+            <button onClick={() => setSuccessMsg(null)} className="text-emerald-700 hover:text-emerald-900">
+              <i className="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        )}
+
         {/* TAB 1: Logements Management */}
         {activeTab === 'logements' && (
           <div className="bg-white rounded-none border border-slate-300 shadow-xs space-y-5 p-6">
@@ -225,8 +295,8 @@ export default function AdminDashboardPage() {
                 <p className="text-xs text-slate-500">Consultez, modifiez ou masquez les hébergements visibles par les clients.</p>
               </div>
               <button
-                onClick={() => alert("Module d'ajout direct d'annonce : vous pouvez créer une annonce via la page /devenir-hote ou via la base Django Admin.")}
-                className="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-none shadow-xs border border-brand-600 transition-all flex items-center gap-2 shrink-0 cursor-pointer"
+                onClick={() => setIsAddModalOpen(true)}
+                className="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-none shadow-xs border border-brand-600 transition-all flex items-center gap-2 shrink-0 cursor-pointer active:scale-98"
               >
                 <i className="fa-solid fa-plus text-xs"></i>
                 <span>Ajouter un Logement</span>
@@ -425,6 +495,220 @@ export default function AdminDashboardPage() {
         )}
 
       </main>
+
+      {/* Interactive Modal: Ajouter un Logement */}
+      {isAddModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-300 w-full max-w-2xl rounded-none shadow-2xl p-6 sm:p-8 space-y-6 my-8">
+            
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-brand-50 text-brand-600 flex items-center justify-center border border-brand-200">
+                  <i className="fa-solid fa-house-medical text-lg"></i>
+                </div>
+                <div>
+                  <h3 className="text-xl font-black text-slate-900">Ajouter un Logement au Catalogue</h3>
+                  <p className="text-xs text-slate-500">Publiez directement un hébergement sur FeelToHome.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsAddModalOpen(false)}
+                className="text-slate-400 hover:text-slate-700 p-2 text-lg font-bold"
+              >
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleAddLogementSubmit} className="space-y-4">
+              
+              {/* Nom du logement */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Nom / Titre du Logement *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newNom}
+                  onChange={(e) => setNewNom(e.target.value)}
+                  placeholder="ex: Appartement de Luxe Bonapriso"
+                  className="w-full px-3.5 py-2.5 text-xs rounded-none border border-slate-300 bg-slate-50 focus:outline-none focus:border-brand-500 font-semibold"
+                />
+              </div>
+
+              {/* Type & Ville */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Type d'Hébergement *
+                  </label>
+                  <select
+                    value={newType}
+                    onChange={(e) => setNewType(e.target.value)}
+                    className="w-full px-3.5 py-2.5 text-xs rounded-none border border-slate-300 bg-slate-50 focus:outline-none focus:border-brand-500 font-semibold"
+                  >
+                    <option value="APPARTEMENT">Appartement meublé</option>
+                    <option value="VILLA">Villa de luxe</option>
+                    <option value="HOTEL">Hôtel</option>
+                    <option value="STUDIO">Studio meublé</option>
+                    <option value="RESIDENCE">Résidence</option>
+                    <option value="AUBERGE">Auberge</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Ville *
+                  </label>
+                  <select
+                    value={newVille}
+                    onChange={(e) => setNewVille(e.target.value)}
+                    className="w-full px-3.5 py-2.5 text-xs rounded-none border border-slate-300 bg-slate-50 focus:outline-none focus:border-brand-500 font-semibold"
+                  >
+                    <option value="Douala">Douala</option>
+                    <option value="Yaoundé">Yaoundé</option>
+                    <option value="Kribi">Kribi</option>
+                    <option value="Limbe">Limbe</option>
+                    <option value="Bamenda">Bamenda</option>
+                    <option value="Bafoussam">Bafoussam</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Quartier & Prix par nuit */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Quartier
+                  </label>
+                  <input
+                    type="text"
+                    value={newQuartier}
+                    onChange={(e) => setNewQuartier(e.target.value)}
+                    placeholder="ex: Bastos, Bonapriso, Plage Ngoye"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-none border border-slate-300 bg-slate-50 focus:outline-none focus:border-brand-500 font-semibold"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Prix par nuit (FCFA / XAF) *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    value={newPrix}
+                    onChange={(e) => setNewPrix(e.target.value)}
+                    placeholder="35000"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-none border border-slate-300 bg-slate-50 focus:outline-none focus:border-brand-500 font-bold text-brand-600"
+                  />
+                </div>
+              </div>
+
+              {/* Capacités */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
+                    Voyageurs
+                  </label>
+                  <input
+                    type="number"
+                    value={newCapacite}
+                    onChange={(e) => setNewCapacite(e.target.value)}
+                    className="w-full px-3 py-2 text-xs rounded-none border border-slate-300 bg-slate-50 text-center font-bold"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
+                    Chambres
+                  </label>
+                  <input
+                    type="number"
+                    value={newChambres}
+                    onChange={(e) => setNewChambres(e.target.value)}
+                    className="w-full px-3 py-2 text-xs rounded-none border border-slate-300 bg-slate-50 text-center font-bold"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
+                    Lits
+                  </label>
+                  <input
+                    type="number"
+                    value={newLits}
+                    onChange={(e) => setNewLits(e.target.value)}
+                    className="w-full px-3 py-2 text-xs rounded-none border border-slate-300 bg-slate-50 text-center font-bold"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
+                    Salles de bain
+                  </label>
+                  <input
+                    type="number"
+                    value={newSallesBain}
+                    onChange={(e) => setNewSallesBain(e.target.value)}
+                    className="w-full px-3 py-2 text-xs rounded-none border border-slate-300 bg-slate-50 text-center font-bold"
+                  />
+                </div>
+              </div>
+
+              {/* Photo URL */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  URL de la Photo Principale HD
+                </label>
+                <input
+                  type="url"
+                  value={newPhoto}
+                  onChange={(e) => setNewPhoto(e.target.value)}
+                  placeholder="https://..."
+                  className="w-full px-3.5 py-2.5 text-xs rounded-none border border-slate-300 bg-slate-50 focus:outline-none focus:border-brand-500 font-mono text-slate-600"
+                />
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Description du Logement
+                </label>
+                <textarea
+                  rows={3}
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                  placeholder="Présentez les atouts du logement (climatisation, Wi-Fi, sécurité 24h/7, groupe électrogène...)..."
+                  className="w-full px-3.5 py-2.5 text-xs rounded-none border border-slate-300 bg-slate-50 focus:outline-none focus:border-brand-500 font-medium"
+                />
+              </div>
+
+              {/* Modal Actions */}
+              <div className="pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsAddModalOpen(false)}
+                  className="px-4 py-2.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-none transition-all"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 text-xs font-bold text-white bg-brand-500 hover:bg-brand-600 border border-brand-600 rounded-none shadow-sm transition-all flex items-center gap-2"
+                >
+                  <i className="fa-solid fa-check"></i>
+                  <span>Publier le Logement</span>
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );
