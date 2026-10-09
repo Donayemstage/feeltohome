@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useLanguage } from './LanguageContext';
 import { Locale } from '@/lib/i18n';
-import { Globe, Menu, X, User, ChevronDown, Check } from 'lucide-react';
+import { Globe, Menu, X, User, ChevronDown, Check, PlusCircle } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const { locale, setLocale, t } = useLanguage();
@@ -18,7 +18,7 @@ export const Header: React.FC = () => {
     setIsLangMenuOpen(false);
   };
 
-  // Scroll detection to switch transparent header to dark readable text on scroll
+  // Scroll detection to switch header background & text color on scroll
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 30) {
@@ -47,8 +47,8 @@ export const Header: React.FC = () => {
     <header
       className={`sticky top-0 inset-x-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/95 backdrop-blur-xl border-b border-slate-200/80 text-slate-900 shadow-md'
-          : 'bg-transparent backdrop-blur-md border-b border-white/10 text-white'
+          ? 'bg-slate-900/95 backdrop-blur-xl border-b border-slate-800 text-white shadow-xl'
+          : 'bg-white/95 backdrop-blur-md border-b border-slate-200/80 text-slate-900 shadow-xs'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -60,7 +60,7 @@ export const Header: React.FC = () => {
           </div>
           <span
             className={`text-xl font-extrabold tracking-tight transition-colors ${
-              isScrolled ? 'text-brand-500' : 'text-white group-hover:text-brand-300'
+              isScrolled ? 'text-white group-hover:text-brand-400' : 'text-slate-900 group-hover:text-brand-600'
             }`}
           >
             FeelToHome
@@ -73,8 +73,8 @@ export const Header: React.FC = () => {
             href="/"
             className={`px-3 py-1.5 rounded-lg transition-all ${
               isScrolled
-                ? 'text-slate-700 hover:text-brand-500 hover:bg-slate-100'
-                : 'text-slate-100 hover:text-white hover:bg-white/10'
+                ? 'text-slate-200 hover:text-white hover:bg-white/10'
+                : 'text-slate-800 hover:text-brand-600 hover:bg-slate-100'
             }`}
           >
             {t.nav.home}
@@ -83,8 +83,8 @@ export const Header: React.FC = () => {
             href="/logements"
             className={`px-3 py-1.5 rounded-lg transition-all ${
               isScrolled
-                ? 'text-slate-700 hover:text-brand-500 hover:bg-slate-100'
-                : 'text-slate-100 hover:text-white hover:bg-white/10'
+                ? 'text-slate-200 hover:text-white hover:bg-white/10'
+                : 'text-slate-800 hover:text-brand-600 hover:bg-slate-100'
             }`}
           >
             {t.nav.listings}
@@ -93,8 +93,8 @@ export const Header: React.FC = () => {
             href="/a-propos"
             className={`px-3 py-1.5 rounded-lg transition-all ${
               isScrolled
-                ? 'text-slate-700 hover:text-brand-500 hover:bg-slate-100'
-                : 'text-slate-100 hover:text-white hover:bg-white/10'
+                ? 'text-slate-200 hover:text-white hover:bg-white/10'
+                : 'text-slate-800 hover:text-brand-600 hover:bg-slate-100'
             }`}
           >
             {t.nav.about}
@@ -103,17 +103,22 @@ export const Header: React.FC = () => {
             href="/contact"
             className={`px-3 py-1.5 rounded-lg transition-all ${
               isScrolled
-                ? 'text-slate-700 hover:text-brand-500 hover:bg-slate-100'
-                : 'text-slate-100 hover:text-white hover:bg-white/10'
+                ? 'text-slate-200 hover:text-white hover:bg-white/10'
+                : 'text-slate-800 hover:text-brand-600 hover:bg-slate-100'
             }`}
           >
             {t.nav.contact}
           </Link>
           <Link
             href="/devenir-hote"
-            className="px-3 py-1.5 rounded-lg transition-all text-brand-400 font-bold hover:text-brand-300 hover:bg-white/10"
+            className={`px-3 py-1.5 rounded-lg transition-all font-bold flex items-center gap-1.5 ${
+              isScrolled
+                ? 'text-brand-400 hover:text-brand-300 hover:bg-white/10'
+                : 'text-brand-600 hover:text-brand-700 hover:bg-brand-50'
+            }`}
           >
-            Publier une annonce
+            <PlusCircle className="w-4 h-4" />
+            <span>Publier une annonce</span>
           </Link>
         </nav>
 
@@ -127,21 +132,21 @@ export const Header: React.FC = () => {
               onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
               className={`flex items-center gap-2 border rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs ${
                 isScrolled
-                  ? 'bg-slate-100 hover:bg-slate-200 border-slate-200 text-slate-800'
-                  : 'bg-white/15 hover:bg-white/25 border-white/25 text-white'
+                  ? 'bg-white/15 hover:bg-white/25 border-white/25 text-white'
+                  : 'bg-slate-100 hover:bg-slate-200 border-slate-200 text-slate-800'
               }`}
             >
-              <Globe className={`w-3.5 h-3.5 shrink-0 ${isScrolled ? 'text-brand-500' : 'text-brand-300'}`} />
+              <Globe className={`w-3.5 h-3.5 shrink-0 ${isScrolled ? 'text-brand-400' : 'text-brand-600'}`} />
               <span>{locale === 'fr' ? 'FR — Français' : locale === 'en' ? 'EN — English' : 'DE — Deutsch'}</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isLangMenuOpen ? 'rotate-180' : ''} ${isScrolled ? 'text-slate-500' : 'text-white/80'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isLangMenuOpen ? 'rotate-180' : ''} ${isScrolled ? 'text-white/80' : 'text-slate-500'}`} />
             </button>
 
             {isLangMenuOpen && (
               <div
                 className={`absolute right-0 top-full mt-2 w-48 rounded-2xl shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 ${
                   isScrolled
-                    ? 'bg-white border border-slate-200 text-slate-900'
-                    : 'bg-slate-900/95 backdrop-blur-2xl border border-white/20 text-white'
+                    ? 'bg-slate-900 border border-white/20 text-white'
+                    : 'bg-white border border-slate-200 text-slate-900'
                 }`}
               >
                 <button
@@ -149,7 +154,7 @@ export const Header: React.FC = () => {
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
                     locale === 'fr'
                       ? 'bg-brand-500 text-white font-bold'
-                      : isScrolled ? 'hover:bg-slate-100 text-slate-700' : 'hover:bg-white/10 text-slate-200'
+                      : isScrolled ? 'hover:bg-white/10 text-slate-200' : 'hover:bg-slate-100 text-slate-700'
                   }`}
                 >
                   <span className="flex items-center gap-2">
@@ -164,7 +169,7 @@ export const Header: React.FC = () => {
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
                     locale === 'en'
                       ? 'bg-brand-500 text-white font-bold'
-                      : isScrolled ? 'hover:bg-slate-100 text-slate-700' : 'hover:bg-white/10 text-slate-200'
+                      : isScrolled ? 'hover:bg-white/10 text-slate-200' : 'hover:bg-slate-100 text-slate-700'
                   }`}
                 >
                   <span className="flex items-center gap-2">
@@ -179,7 +184,7 @@ export const Header: React.FC = () => {
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
                     locale === 'de'
                       ? 'bg-brand-500 text-white font-bold'
-                      : isScrolled ? 'hover:bg-slate-100 text-slate-700' : 'hover:bg-white/10 text-slate-200'
+                      : isScrolled ? 'hover:bg-white/10 text-slate-200' : 'hover:bg-slate-100 text-slate-700'
                   }`}
                 >
                   <span className="flex items-center gap-2">
@@ -195,7 +200,7 @@ export const Header: React.FC = () => {
           <Link
             href="/connexion"
             className={`text-xs font-semibold px-3 py-2 transition-colors ${
-              isScrolled ? 'text-slate-700 hover:text-brand-500' : 'text-slate-100 hover:text-white'
+              isScrolled ? 'text-slate-200 hover:text-white' : 'text-slate-800 hover:text-brand-600'
             }`}
           >
             {t.nav.login}
@@ -220,8 +225,8 @@ export const Header: React.FC = () => {
               onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
               className={`flex items-center gap-1 border rounded-xl px-2.5 py-1 text-[11px] font-bold ${
                 isScrolled
-                  ? 'bg-slate-100 border-slate-200 text-slate-800'
-                  : 'bg-white/15 border-white/25 text-white'
+                  ? 'bg-white/15 border-white/25 text-white'
+                  : 'bg-slate-100 border-slate-200 text-slate-800'
               }`}
             >
               <span>{locale.toUpperCase()}</span>
@@ -232,8 +237,8 @@ export const Header: React.FC = () => {
               <div
                 className={`absolute right-0 top-full mt-2 w-40 rounded-xl shadow-2xl p-1 z-50 ${
                   isScrolled
-                    ? 'bg-white border border-slate-200 text-slate-900'
-                    : 'bg-slate-900/95 backdrop-blur-2xl border border-white/20 text-white'
+                    ? 'bg-slate-900 border border-white/20 text-white'
+                    : 'bg-white border border-slate-200 text-slate-900'
                 }`}
               >
                 <button
@@ -241,7 +246,7 @@ export const Header: React.FC = () => {
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium ${
                     locale === 'fr'
                       ? 'bg-brand-500 text-white font-bold'
-                      : isScrolled ? 'hover:bg-slate-100' : 'hover:bg-white/10'
+                      : isScrolled ? 'hover:bg-white/10' : 'hover:bg-slate-100'
                   }`}
                 >
                   <span>🇫🇷</span> <span>FR</span>
@@ -251,7 +256,7 @@ export const Header: React.FC = () => {
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium ${
                     locale === 'en'
                       ? 'bg-brand-500 text-white font-bold'
-                      : isScrolled ? 'hover:bg-slate-100' : 'hover:bg-white/10'
+                      : isScrolled ? 'hover:bg-white/10' : 'hover:bg-slate-100'
                   }`}
                 >
                   <span>🇬🇧</span> <span>EN</span>
@@ -261,7 +266,7 @@ export const Header: React.FC = () => {
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium ${
                     locale === 'de'
                       ? 'bg-brand-500 text-white font-bold'
-                      : isScrolled ? 'hover:bg-slate-100' : 'hover:bg-white/10'
+                      : isScrolled ? 'hover:bg-white/10' : 'hover:bg-slate-100'
                   }`}
                 >
                   <span>🇩🇪</span> <span>DE</span>
@@ -273,7 +278,7 @@ export const Header: React.FC = () => {
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className={`p-2 rounded-xl transition-colors ${
-              isScrolled ? 'text-slate-800 hover:bg-slate-100' : 'text-slate-100 hover:text-white hover:bg-white/10'
+              isScrolled ? 'text-white hover:bg-white/10' : 'text-slate-800 hover:bg-slate-100'
             }`}
             aria-label="Menu mobile"
           >
@@ -287,15 +292,15 @@ export const Header: React.FC = () => {
         <div
           className={`md:hidden border-b px-4 pt-2 pb-6 space-y-3 transition-colors ${
             isScrolled
-              ? 'bg-white border-slate-200 text-slate-900 shadow-xl'
-              : 'bg-slate-900/95 backdrop-blur-2xl border-white/10 text-white'
+              ? 'bg-slate-900 border-slate-800 text-white shadow-xl'
+              : 'bg-white border-slate-200 text-slate-900 shadow-xl'
           }`}
         >
           <Link
             href="/"
             onClick={() => setIsMenuOpen(false)}
             className={`block px-3 py-2 text-sm font-semibold rounded-xl transition-all ${
-              isScrolled ? 'text-slate-800 hover:bg-slate-100' : 'text-slate-200 hover:text-white hover:bg-white/10'
+              isScrolled ? 'text-slate-200 hover:text-white hover:bg-white/10' : 'text-slate-800 hover:bg-slate-100'
             }`}
           >
             {t.nav.home}
@@ -304,7 +309,7 @@ export const Header: React.FC = () => {
             href="/logements"
             onClick={() => setIsMenuOpen(false)}
             className={`block px-3 py-2 text-sm font-semibold rounded-xl transition-all ${
-              isScrolled ? 'text-slate-800 hover:bg-slate-100' : 'text-slate-200 hover:text-white hover:bg-white/10'
+              isScrolled ? 'text-slate-200 hover:text-white hover:bg-white/10' : 'text-slate-800 hover:bg-slate-100'
             }`}
           >
             {t.nav.listings}
@@ -313,7 +318,7 @@ export const Header: React.FC = () => {
             href="/a-propos"
             onClick={() => setIsMenuOpen(false)}
             className={`block px-3 py-2 text-sm font-semibold rounded-xl transition-all ${
-              isScrolled ? 'text-slate-800 hover:bg-slate-100' : 'text-slate-200 hover:text-white hover:bg-white/10'
+              isScrolled ? 'text-slate-200 hover:text-white hover:bg-white/10' : 'text-slate-800 hover:bg-slate-100'
             }`}
           >
             {t.nav.about}
@@ -322,19 +327,27 @@ export const Header: React.FC = () => {
             href="/contact"
             onClick={() => setIsMenuOpen(false)}
             className={`block px-3 py-2 text-sm font-semibold rounded-xl transition-all ${
-              isScrolled ? 'text-slate-800 hover:bg-slate-100' : 'text-slate-200 hover:text-white hover:bg-white/10'
+              isScrolled ? 'text-slate-200 hover:text-white hover:bg-white/10' : 'text-slate-800 hover:bg-slate-100'
             }`}
           >
             {t.nav.contact}
           </Link>
+          <Link
+            href="/devenir-hote"
+            onClick={() => setIsMenuOpen(false)}
+            className="block px-3 py-2 text-sm font-bold text-brand-500 rounded-xl hover:bg-brand-50/10 transition-all"
+          >
+            + Publier une annonce
+          </Link>
+
           <div className="pt-2 border-t border-slate-200/40 flex flex-col gap-2">
             <Link
               href="/connexion"
               onClick={() => setIsMenuOpen(false)}
               className={`w-full text-center py-2.5 text-xs font-semibold rounded-xl border transition-all ${
                 isScrolled
-                  ? 'text-slate-700 bg-slate-100 hover:bg-slate-200 border-slate-200'
-                  : 'text-white bg-white/15 hover:bg-white/25 border-white/20'
+                  ? 'text-white bg-white/15 hover:bg-white/25 border-white/20'
+                  : 'text-slate-700 bg-slate-100 hover:bg-slate-200 border-slate-200'
               }`}
             >
               {t.nav.login}
