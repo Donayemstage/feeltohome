@@ -161,14 +161,24 @@ export default function DevenirHotePage() {
           </div>
 
           {submitted ? (
-            <div className="p-8 rounded-none bg-emerald-50 border border-emerald-300 text-center space-y-3">
-              <div className="w-12 h-12 bg-emerald-500 text-white rounded-none flex items-center justify-center mx-auto shadow-xs">
-                <i className="fa-solid fa-check text-xl"></i>
+            <div className="p-8 rounded-none bg-emerald-50 border border-emerald-300 text-center space-y-4 shadow-xs">
+              <div className="w-14 h-14 bg-emerald-500 text-white rounded-none flex items-center justify-center mx-auto shadow-xs">
+                <i className="fa-solid fa-check text-2xl"></i>
               </div>
-              <h3 className="text-lg font-bold text-emerald-900">{t.devenirHotePage.successHostTitle}</h3>
-              <p className="text-xs text-emerald-700 leading-relaxed">
-                {t.devenirHotePage.successHostDesc}
+              <h3 className="text-xl font-extrabold text-emerald-900">Demande de Partenariat Transmise avec Succès !</h3>
+              <p className="text-xs text-emerald-800 leading-relaxed max-w-lg mx-auto font-medium">
+                Merci <strong>{hostForm.nom || 'Cher Partenaire'}</strong> ! Votre candidature pour votre bien à <strong>{hostForm.ville} ({hostForm.quartier || 'Quartier'})</strong> a bien été enregistrée dans notre système.
               </p>
+              <div className="bg-white p-4 border border-emerald-200 text-left text-xs text-slate-700 space-y-2">
+                <div className="font-bold text-slate-900 flex items-center gap-2">
+                  <i className="fa-solid fa-user-gear text-brand-600"></i>
+                  <span>Activation de votre Espace Hôte Partenaire :</span>
+                </div>
+                <p className="text-slate-600">
+                  1. Un conseiller <strong>Donayem Tech</strong> vérifie vos coordonnées (contact direct sous 24h au <strong>{hostForm.telephone}</strong>).<br />
+                  2. Une fois votre compte validé, vous accédez à votre <strong>Tableau de Bord Propriétaire personnel</strong> pour ajouter, modifier vos photos et suivre vos réservations en temps réel.
+                </p>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleHostSubmit} className="space-y-5">
