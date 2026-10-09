@@ -58,7 +58,7 @@ export const Header: React.FC = () => {
         
         {/* Logo with FontAwesome Icon */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg bg-brand-500 text-white flex items-center justify-center shadow-xs group-hover:bg-brand-600 transition-colors">
+          <div className="w-8 h-8 rounded-none bg-brand-500 text-white flex items-center justify-center shadow-xs group-hover:bg-brand-600 transition-colors">
             <i className="fa-solid fa-house-chimney text-base"></i>
           </div>
           <span className="text-lg font-bold tracking-tight text-slate-900 group-hover:text-brand-600 transition-colors">
@@ -70,7 +70,7 @@ export const Header: React.FC = () => {
         <nav className="hidden md:flex items-center gap-1.5 text-xs font-semibold">
           <Link
             href="/"
-            className={`px-3 py-1.5 rounded-md transition-all ${
+            className={`px-3 py-1.5 rounded-none transition-all ${
               isActive('/')
                 ? 'bg-slate-900 text-white font-bold shadow-xs'
                 : 'text-slate-700 hover:text-brand-600 hover:bg-slate-100'
@@ -81,7 +81,7 @@ export const Header: React.FC = () => {
 
           <Link
             href="/logements"
-            className={`px-3 py-1.5 rounded-md transition-all ${
+            className={`px-3 py-1.5 rounded-none transition-all ${
               isActive('/logements')
                 ? 'bg-slate-900 text-white font-bold shadow-xs'
                 : 'text-slate-700 hover:text-brand-600 hover:bg-slate-100'
@@ -92,7 +92,7 @@ export const Header: React.FC = () => {
 
           <Link
             href="/a-propos"
-            className={`px-3 py-1.5 rounded-md transition-all ${
+            className={`px-3 py-1.5 rounded-none transition-all ${
               isActive('/a-propos')
                 ? 'bg-slate-900 text-white font-bold shadow-xs'
                 : 'text-slate-700 hover:text-brand-600 hover:bg-slate-100'
@@ -103,7 +103,7 @@ export const Header: React.FC = () => {
 
           <Link
             href="/contact"
-            className={`px-3 py-1.5 rounded-md transition-all ${
+            className={`px-3 py-1.5 rounded-none transition-all ${
               isActive('/contact')
                 ? 'bg-slate-900 text-white font-bold shadow-xs'
                 : 'text-slate-700 hover:text-brand-600 hover:bg-slate-100'
@@ -114,7 +114,7 @@ export const Header: React.FC = () => {
 
           <Link
             href="/devenir-hote"
-            className={`px-3 py-1.5 rounded-lg transition-all font-bold flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-none transition-all font-bold flex items-center gap-1.5 ${
               isActive('/devenir-hote')
                 ? 'bg-brand-700 text-white font-bold shadow-sm'
                 : 'text-brand-600 hover:text-brand-700 bg-brand-50 hover:bg-brand-100/80 border border-brand-200/60'
@@ -133,7 +133,7 @@ export const Header: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-              className="flex items-center gap-2 border border-slate-200 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all bg-slate-100 hover:bg-slate-200/80 text-slate-800 cursor-pointer shadow-xs"
+              className="flex items-center gap-2 border border-slate-200 rounded-none px-3.5 py-1.5 text-xs font-bold transition-all bg-slate-100 hover:bg-slate-200/80 text-slate-800 cursor-pointer shadow-xs"
             >
               <i className="fa-solid fa-globe text-brand-600 text-sm"></i>
               <span>{locale === 'fr' ? 'FR — Français' : locale === 'en' ? 'EN — English' : 'DE — Deutsch'}</span>
@@ -141,10 +141,10 @@ export const Header: React.FC = () => {
             </button>
 
             {isLangMenuOpen && (
-              <div className="absolute right-0 top-full mt-2 w-48 rounded-2xl shadow-2xl p-1.5 z-50 bg-white border border-slate-200 text-slate-900 animate-in fade-in slide-in-from-top-2 duration-150">
+              <div className="absolute right-0 top-full mt-2 w-48 rounded-none shadow-2xl p-1.5 z-50 bg-white border border-slate-200 text-slate-900 animate-in fade-in slide-in-from-top-2 duration-150">
                 <button
                   onClick={() => handleLocaleChange('fr')}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-none text-xs font-semibold transition-colors ${
                     locale === 'fr'
                       ? 'bg-brand-500 text-white font-bold'
                       : 'hover:bg-slate-100 text-slate-700'
@@ -159,7 +159,7 @@ export const Header: React.FC = () => {
 
                 <button
                   onClick={() => handleLocaleChange('en')}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-none text-xs font-semibold transition-colors ${
                     locale === 'en'
                       ? 'bg-brand-500 text-white font-bold'
                       : 'hover:bg-slate-100 text-slate-700'
@@ -174,7 +174,7 @@ export const Header: React.FC = () => {
 
                 <button
                   onClick={() => handleLocaleChange('de')}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-none text-xs font-semibold transition-colors ${
                     locale === 'de'
                       ? 'bg-brand-500 text-white font-bold'
                       : 'hover:bg-slate-100 text-slate-700'
@@ -199,7 +199,7 @@ export const Header: React.FC = () => {
 
           <Link
             href="/inscription"
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-xl shadow-md shadow-brand-500/30 transition-all hover:scale-[1.02] active:scale-95 border border-brand-400/30"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-none shadow-md shadow-brand-500/30 transition-all hover:scale-[1.02] active:scale-95 border border-brand-400/30"
           >
             <i className="fa-solid fa-user-plus text-xs"></i>
             <span>{t.nav.register}</span>
@@ -214,17 +214,17 @@ export const Header: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-              className="flex items-center gap-1.5 border border-slate-200 bg-slate-100 text-slate-800 rounded-xl px-2.5 py-1 text-[11px] font-bold"
+              className="flex items-center gap-1.5 border border-slate-200 bg-slate-100 text-slate-800 rounded-none px-2.5 py-1 text-[11px] font-bold"
             >
               <span>{locale.toUpperCase()}</span>
               <i className={`fa-solid fa-chevron-down text-[9px] text-slate-500 transition-transform ${isLangMenuOpen ? 'rotate-180' : ''}`}></i>
             </button>
 
             {isLangMenuOpen && (
-              <div className="absolute right-0 top-full mt-2 w-40 rounded-xl shadow-2xl p-1 z-50 bg-white border border-slate-200 text-slate-900">
+              <div className="absolute right-0 top-full mt-2 w-40 rounded-none shadow-2xl p-1 z-50 bg-white border border-slate-200 text-slate-900">
                 <button
                   onClick={() => handleLocaleChange('fr')}
-                  className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium ${
+                  className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-none text-xs font-medium ${
                     locale === 'fr' ? 'bg-brand-500 text-white font-bold' : 'hover:bg-slate-100'
                   }`}
                 >
@@ -232,7 +232,7 @@ export const Header: React.FC = () => {
                 </button>
                 <button
                   onClick={() => handleLocaleChange('en')}
-                  className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium ${
+                  className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-none text-xs font-medium ${
                     locale === 'en' ? 'bg-brand-500 text-white font-bold' : 'hover:bg-slate-100'
                   }`}
                 >
@@ -240,7 +240,7 @@ export const Header: React.FC = () => {
                 </button>
                 <button
                   onClick={() => handleLocaleChange('de')}
-                  className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium ${
+                  className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-none text-xs font-medium ${
                     locale === 'de' ? 'bg-brand-500 text-white font-bold' : 'hover:bg-slate-100'
                   }`}
                 >
@@ -252,7 +252,7 @@ export const Header: React.FC = () => {
 
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2 rounded-xl text-slate-800 hover:bg-slate-100 transition-colors"
+            className="p-2 rounded-none text-slate-800 hover:bg-slate-100 transition-colors"
             aria-label="Menu mobile"
           >
             {isMenuOpen ? <i className="fa-solid fa-xmark text-xl"></i> : <i className="fa-solid fa-bars text-xl"></i>}
@@ -266,7 +266,7 @@ export const Header: React.FC = () => {
           <Link
             href="/"
             onClick={() => setIsMenuOpen(false)}
-            className={`block px-3.5 py-2 text-xs rounded-xl transition-all ${
+            className={`block px-3.5 py-2 text-xs rounded-none transition-all ${
               isActive('/')
                 ? 'bg-slate-900 text-white font-bold'
                 : 'text-slate-800 font-semibold hover:bg-slate-100'
@@ -277,7 +277,7 @@ export const Header: React.FC = () => {
           <Link
             href="/logements"
             onClick={() => setIsMenuOpen(false)}
-            className={`block px-3.5 py-2 text-xs rounded-xl transition-all ${
+            className={`block px-3.5 py-2 text-xs rounded-none transition-all ${
               isActive('/logements')
                 ? 'bg-slate-900 text-white font-bold'
                 : 'text-slate-800 font-semibold hover:bg-slate-100'
@@ -288,7 +288,7 @@ export const Header: React.FC = () => {
           <Link
             href="/a-propos"
             onClick={() => setIsMenuOpen(false)}
-            className={`block px-3.5 py-2 text-xs rounded-xl transition-all ${
+            className={`block px-3.5 py-2 text-xs rounded-none transition-all ${
               isActive('/a-propos')
                 ? 'bg-slate-900 text-white font-bold'
                 : 'text-slate-800 font-semibold hover:bg-slate-100'
@@ -299,7 +299,7 @@ export const Header: React.FC = () => {
           <Link
             href="/contact"
             onClick={() => setIsMenuOpen(false)}
-            className={`block px-3.5 py-2 text-xs rounded-xl transition-all ${
+            className={`block px-3.5 py-2 text-xs rounded-none transition-all ${
               isActive('/contact')
                 ? 'bg-slate-900 text-white font-bold'
                 : 'text-slate-800 font-semibold hover:bg-slate-100'
@@ -310,7 +310,7 @@ export const Header: React.FC = () => {
           <Link
             href="/devenir-hote"
             onClick={() => setIsMenuOpen(false)}
-            className={`block px-3.5 py-2 text-xs rounded-xl transition-all ${
+            className={`block px-3.5 py-2 text-xs rounded-none transition-all ${
               isActive('/devenir-hote')
                 ? 'bg-brand-600 text-white font-bold'
                 : 'text-brand-600 bg-brand-50 font-bold hover:bg-brand-100'
@@ -323,14 +323,14 @@ export const Header: React.FC = () => {
             <Link
               href="/connexion"
               onClick={() => setIsMenuOpen(false)}
-              className="w-full text-center py-2.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl transition-all"
+              className="w-full text-center py-2.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-none transition-all"
             >
               {t.nav.login}
             </Link>
             <Link
               href="/inscription"
               onClick={() => setIsMenuOpen(false)}
-              className="w-full text-center py-2.5 text-xs font-semibold text-white bg-brand-500 hover:bg-brand-600 rounded-xl shadow-md transition-all"
+              className="w-full text-center py-2.5 text-xs font-semibold text-white bg-brand-500 hover:bg-brand-600 rounded-none shadow-md transition-all"
             >
               {t.nav.register}
             </Link>
