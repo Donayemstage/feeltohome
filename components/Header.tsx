@@ -18,10 +18,9 @@ export const Header: React.FC = () => {
     setIsLangMenuOpen(false);
   };
 
-  // Scroll detection to switch header background & text color on scroll
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 30) {
+      if (window.scrollY > 10) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -45,10 +44,8 @@ export const Header: React.FC = () => {
 
   return (
     <header
-      className={`sticky top-0 inset-x-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-slate-900/95 backdrop-blur-xl border-b border-slate-800 text-white shadow-xl'
-          : 'bg-white/95 backdrop-blur-md border-b border-slate-200/80 text-slate-900 shadow-xs'
+      className={`sticky top-0 inset-x-0 z-50 bg-white border-b border-slate-200/90 text-slate-900 transition-shadow duration-300 ${
+        isScrolled ? 'shadow-md' : 'shadow-xs'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -58,11 +55,7 @@ export const Header: React.FC = () => {
           <div className="w-9 h-9 rounded-xl bg-brand-500 text-white flex items-center justify-center shadow-md shadow-brand-500/30 group-hover:bg-brand-600 transition-colors">
             <span className="material-symbols-outlined text-[24px]">roofing</span>
           </div>
-          <span
-            className={`text-xl font-extrabold tracking-tight transition-colors ${
-              isScrolled ? 'text-white group-hover:text-brand-400' : 'text-slate-900 group-hover:text-brand-600'
-            }`}
-          >
+          <span className="text-xl font-extrabold tracking-tight text-slate-900 group-hover:text-brand-600 transition-colors">
             FeelToHome
           </span>
         </Link>
@@ -71,53 +64,33 @@ export const Header: React.FC = () => {
         <nav className="hidden md:flex items-center gap-6 text-sm font-semibold">
           <Link
             href="/"
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              isScrolled
-                ? 'text-slate-200 hover:text-white hover:bg-white/10'
-                : 'text-slate-800 hover:text-brand-600 hover:bg-slate-100'
-            }`}
+            className="px-3 py-1.5 rounded-lg transition-all text-slate-700 hover:text-brand-600 hover:bg-slate-100"
           >
             {t.nav.home}
           </Link>
           <Link
             href="/logements"
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              isScrolled
-                ? 'text-slate-200 hover:text-white hover:bg-white/10'
-                : 'text-slate-800 hover:text-brand-600 hover:bg-slate-100'
-            }`}
+            className="px-3 py-1.5 rounded-lg transition-all text-slate-700 hover:text-brand-600 hover:bg-slate-100"
           >
             {t.nav.listings}
           </Link>
           <Link
             href="/a-propos"
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              isScrolled
-                ? 'text-slate-200 hover:text-white hover:bg-white/10'
-                : 'text-slate-800 hover:text-brand-600 hover:bg-slate-100'
-            }`}
+            className="px-3 py-1.5 rounded-lg transition-all text-slate-700 hover:text-brand-600 hover:bg-slate-100"
           >
             {t.nav.about}
           </Link>
           <Link
             href="/contact"
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              isScrolled
-                ? 'text-slate-200 hover:text-white hover:bg-white/10'
-                : 'text-slate-800 hover:text-brand-600 hover:bg-slate-100'
-            }`}
+            className="px-3 py-1.5 rounded-lg transition-all text-slate-700 hover:text-brand-600 hover:bg-slate-100"
           >
             {t.nav.contact}
           </Link>
           <Link
             href="/devenir-hote"
-            className={`px-3 py-1.5 rounded-lg transition-all font-bold flex items-center gap-1.5 ${
-              isScrolled
-                ? 'text-brand-400 hover:text-brand-300 hover:bg-white/10'
-                : 'text-brand-600 hover:text-brand-700 hover:bg-brand-50'
-            }`}
+            className="px-3.5 py-1.5 rounded-xl transition-all font-bold flex items-center gap-1.5 text-brand-600 hover:text-brand-700 bg-brand-50 hover:bg-brand-100/80 border border-brand-200/60"
           >
-            <PlusCircle className="w-4 h-4" />
+            <PlusCircle className="w-4 h-4 text-brand-500" />
             <span>Publier une annonce</span>
           </Link>
         </nav>
@@ -130,31 +103,21 @@ export const Header: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-              className={`flex items-center gap-2 border rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs ${
-                isScrolled
-                  ? 'bg-white/15 hover:bg-white/25 border-white/25 text-white'
-                  : 'bg-slate-100 hover:bg-slate-200 border-slate-200 text-slate-800'
-              }`}
+              className="flex items-center gap-2 border border-slate-200 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all bg-slate-100 hover:bg-slate-200/80 text-slate-800 cursor-pointer shadow-xs"
             >
-              <Globe className={`w-3.5 h-3.5 shrink-0 ${isScrolled ? 'text-brand-400' : 'text-brand-600'}`} />
+              <Globe className="w-3.5 h-3.5 shrink-0 text-brand-600" />
               <span>{locale === 'fr' ? 'FR — Français' : locale === 'en' ? 'EN — English' : 'DE — Deutsch'}</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isLangMenuOpen ? 'rotate-180' : ''} ${isScrolled ? 'text-white/80' : 'text-slate-500'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-200 ${isLangMenuOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {isLangMenuOpen && (
-              <div
-                className={`absolute right-0 top-full mt-2 w-48 rounded-2xl shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 ${
-                  isScrolled
-                    ? 'bg-slate-900 border border-white/20 text-white'
-                    : 'bg-white border border-slate-200 text-slate-900'
-                }`}
-              >
+              <div className="absolute right-0 top-full mt-2 w-48 rounded-2xl shadow-2xl p-1.5 z-50 bg-white border border-slate-200 text-slate-900 animate-in fade-in slide-in-from-top-2 duration-150">
                 <button
                   onClick={() => handleLocaleChange('fr')}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
                     locale === 'fr'
                       ? 'bg-brand-500 text-white font-bold'
-                      : isScrolled ? 'hover:bg-white/10 text-slate-200' : 'hover:bg-slate-100 text-slate-700'
+                      : 'hover:bg-slate-100 text-slate-700'
                   }`}
                 >
                   <span className="flex items-center gap-2">
@@ -169,7 +132,7 @@ export const Header: React.FC = () => {
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
                     locale === 'en'
                       ? 'bg-brand-500 text-white font-bold'
-                      : isScrolled ? 'hover:bg-white/10 text-slate-200' : 'hover:bg-slate-100 text-slate-700'
+                      : 'hover:bg-slate-100 text-slate-700'
                   }`}
                 >
                   <span className="flex items-center gap-2">
@@ -184,7 +147,7 @@ export const Header: React.FC = () => {
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
                     locale === 'de'
                       ? 'bg-brand-500 text-white font-bold'
-                      : isScrolled ? 'hover:bg-white/10 text-slate-200' : 'hover:bg-slate-100 text-slate-700'
+                      : 'hover:bg-slate-100 text-slate-700'
                   }`}
                 >
                   <span className="flex items-center gap-2">
@@ -199,9 +162,7 @@ export const Header: React.FC = () => {
 
           <Link
             href="/connexion"
-            className={`text-xs font-semibold px-3 py-2 transition-colors ${
-              isScrolled ? 'text-slate-200 hover:text-white' : 'text-slate-800 hover:text-brand-600'
-            }`}
+            className="text-xs font-semibold px-3 py-2 text-slate-700 hover:text-brand-600 transition-colors"
           >
             {t.nav.login}
           </Link>
@@ -218,35 +179,23 @@ export const Header: React.FC = () => {
         {/* Mobile Header Menu Controls */}
         <div className="flex items-center gap-2 md:hidden">
           
-          {/* Mobile Language Popover Button with Arrow */}
+          {/* Mobile Language Popover Button */}
           <div className="relative">
             <button
               type="button"
               onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-              className={`flex items-center gap-1 border rounded-xl px-2.5 py-1 text-[11px] font-bold ${
-                isScrolled
-                  ? 'bg-white/15 border-white/25 text-white'
-                  : 'bg-slate-100 border-slate-200 text-slate-800'
-              }`}
+              className="flex items-center gap-1 border border-slate-200 bg-slate-100 text-slate-800 rounded-xl px-2.5 py-1 text-[11px] font-bold"
             >
               <span>{locale.toUpperCase()}</span>
-              <ChevronDown className={`w-3 h-3 transition-transform ${isLangMenuOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-3 h-3 text-slate-500 transition-transform ${isLangMenuOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {isLangMenuOpen && (
-              <div
-                className={`absolute right-0 top-full mt-2 w-40 rounded-xl shadow-2xl p-1 z-50 ${
-                  isScrolled
-                    ? 'bg-slate-900 border border-white/20 text-white'
-                    : 'bg-white border border-slate-200 text-slate-900'
-                }`}
-              >
+              <div className="absolute right-0 top-full mt-2 w-40 rounded-xl shadow-2xl p-1 z-50 bg-white border border-slate-200 text-slate-900">
                 <button
                   onClick={() => handleLocaleChange('fr')}
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium ${
-                    locale === 'fr'
-                      ? 'bg-brand-500 text-white font-bold'
-                      : isScrolled ? 'hover:bg-white/10' : 'hover:bg-slate-100'
+                    locale === 'fr' ? 'bg-brand-500 text-white font-bold' : 'hover:bg-slate-100'
                   }`}
                 >
                   <span>🇫🇷</span> <span>FR</span>
@@ -254,9 +203,7 @@ export const Header: React.FC = () => {
                 <button
                   onClick={() => handleLocaleChange('en')}
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium ${
-                    locale === 'en'
-                      ? 'bg-brand-500 text-white font-bold'
-                      : isScrolled ? 'hover:bg-white/10' : 'hover:bg-slate-100'
+                    locale === 'en' ? 'bg-brand-500 text-white font-bold' : 'hover:bg-slate-100'
                   }`}
                 >
                   <span>🇬🇧</span> <span>EN</span>
@@ -264,9 +211,7 @@ export const Header: React.FC = () => {
                 <button
                   onClick={() => handleLocaleChange('de')}
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium ${
-                    locale === 'de'
-                      ? 'bg-brand-500 text-white font-bold'
-                      : isScrolled ? 'hover:bg-white/10' : 'hover:bg-slate-100'
+                    locale === 'de' ? 'bg-brand-500 text-white font-bold' : 'hover:bg-slate-100'
                   }`}
                 >
                   <span>🇩🇪</span> <span>DE</span>
@@ -277,9 +222,7 @@ export const Header: React.FC = () => {
 
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={`p-2 rounded-xl transition-colors ${
-              isScrolled ? 'text-white hover:bg-white/10' : 'text-slate-800 hover:bg-slate-100'
-            }`}
+            className="p-2 rounded-xl text-slate-800 hover:bg-slate-100 transition-colors"
             aria-label="Menu mobile"
           >
             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -289,66 +232,48 @@ export const Header: React.FC = () => {
 
       {/* Mobile Drawer Menu */}
       {isMenuOpen && (
-        <div
-          className={`md:hidden border-b px-4 pt-2 pb-6 space-y-3 transition-colors ${
-            isScrolled
-              ? 'bg-slate-900 border-slate-800 text-white shadow-xl'
-              : 'bg-white border-slate-200 text-slate-900 shadow-xl'
-          }`}
-        >
+        <div className="md:hidden border-b border-slate-200 bg-white text-slate-900 px-4 pt-2 pb-6 space-y-3 shadow-xl">
           <Link
             href="/"
             onClick={() => setIsMenuOpen(false)}
-            className={`block px-3 py-2 text-sm font-semibold rounded-xl transition-all ${
-              isScrolled ? 'text-slate-200 hover:text-white hover:bg-white/10' : 'text-slate-800 hover:bg-slate-100'
-            }`}
+            className="block px-3 py-2 text-sm font-semibold rounded-xl text-slate-800 hover:bg-slate-100 transition-all"
           >
             {t.nav.home}
           </Link>
           <Link
             href="/logements"
             onClick={() => setIsMenuOpen(false)}
-            className={`block px-3 py-2 text-sm font-semibold rounded-xl transition-all ${
-              isScrolled ? 'text-slate-200 hover:text-white hover:bg-white/10' : 'text-slate-800 hover:bg-slate-100'
-            }`}
+            className="block px-3 py-2 text-sm font-semibold rounded-xl text-slate-800 hover:bg-slate-100 transition-all"
           >
             {t.nav.listings}
           </Link>
           <Link
             href="/a-propos"
             onClick={() => setIsMenuOpen(false)}
-            className={`block px-3 py-2 text-sm font-semibold rounded-xl transition-all ${
-              isScrolled ? 'text-slate-200 hover:text-white hover:bg-white/10' : 'text-slate-800 hover:bg-slate-100'
-            }`}
+            className="block px-3 py-2 text-sm font-semibold rounded-xl text-slate-800 hover:bg-slate-100 transition-all"
           >
             {t.nav.about}
           </Link>
           <Link
             href="/contact"
             onClick={() => setIsMenuOpen(false)}
-            className={`block px-3 py-2 text-sm font-semibold rounded-xl transition-all ${
-              isScrolled ? 'text-slate-200 hover:text-white hover:bg-white/10' : 'text-slate-800 hover:bg-slate-100'
-            }`}
+            className="block px-3 py-2 text-sm font-semibold rounded-xl text-slate-800 hover:bg-slate-100 transition-all"
           >
             {t.nav.contact}
           </Link>
           <Link
             href="/devenir-hote"
             onClick={() => setIsMenuOpen(false)}
-            className="block px-3 py-2 text-sm font-bold text-brand-500 rounded-xl hover:bg-brand-50/10 transition-all"
+            className="block px-3 py-2 text-sm font-bold text-brand-600 bg-brand-50 rounded-xl hover:bg-brand-100 transition-all"
           >
             + Publier une annonce
           </Link>
 
-          <div className="pt-2 border-t border-slate-200/40 flex flex-col gap-2">
+          <div className="pt-2 border-t border-slate-200 flex flex-col gap-2">
             <Link
               href="/connexion"
               onClick={() => setIsMenuOpen(false)}
-              className={`w-full text-center py-2.5 text-xs font-semibold rounded-xl border transition-all ${
-                isScrolled
-                  ? 'text-white bg-white/15 hover:bg-white/25 border-white/20'
-                  : 'text-slate-700 bg-slate-100 hover:bg-slate-200 border-slate-200'
-              }`}
+              className="w-full text-center py-2.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl transition-all"
             >
               {t.nav.login}
             </Link>
