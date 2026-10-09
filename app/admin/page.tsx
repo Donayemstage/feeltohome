@@ -16,6 +16,8 @@ export default function AdminDashboardPage() {
   // Modal and notification state
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [lastPublishedSlug, setLastPublishedSlug] = useState<string | null>(null);
 
   // New Listing Form State
   const [newNom, setNewNom] = useState('');
@@ -45,17 +47,33 @@ export default function AdminDashboardPage() {
 
   const handleAddLogementSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newNom.trim()) return;
+    setFormError(null);
+
+    // 1. Validation des champs obligatoires
+    if (!newNom.trim()) {
+      setFormError("Attention : Le titre/nom du logement est obligatoire !");
+      return;
+    }
+    if (!newPrix.trim() || parseFloat(newPrix) <= 0) {
+      setFormError("Attention : Veuillez indiquer un tarif par nuit valide en FCFA !");
+      return;
+    }
+    if (!newPhoto.trim()) {
+      setFormError("Attention : Veuillez importer ou sélectionner une photo pour le logement !");
+      return;
+    }
+
+    const generatedSlug = newNom.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now().toString().slice(-4);
 
     const newListing: LogementData = {
       id: Date.now(),
-      slug: newNom.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now().toString().slice(-4),
-      nom: newNom,
+      slug: generatedSlug,
+      nom: newNom.trim(),
       type: newType,
       type_display: newType === 'APPARTEMENT' ? 'Appartement meublé' : newType === 'VILLA' ? 'Villa de luxe' : newType === 'HOTEL' ? 'Hôtel' : newType === 'STUDIO' ? 'Studio meublé' : newType === 'AUBERGE' ? 'Auberge' : 'Résidence',
       ville: newVille,
-      quartier: newQuartier || 'Centre-ville',
-      adresse: `${newQuartier || 'Centre-ville'}, ${newVille}`,
+      quartier: newQuartier.trim() || 'Centre-ville',
+      adresse: `${newQuartier.trim() || 'Centre-ville'}, ${newVille}`,
       prix_par_nuit: parseFloat(newPrix) || 35000,
       devise: 'FCFA',
       capacite: parseInt(newCapacite) || 2,
@@ -64,23 +82,32 @@ export default function AdminDashboardPage() {
       nombre_salles_bain: parseInt(newSallesBain) || 1,
       statut: 'DISPONIBLE',
       statut_display: 'Disponible',
-      description: newDescription || 'Magnifique logement meublé avec toutes les commodités disponible à la réservation sur FeelToHome.',
+      description: newDescription.trim() || 'Magnifique logement meublé avec toutes les commodités disponible à la réservation sur FeelToHome.',
       photos: [
-        { id: Date.now(), url: newPhoto.trim() || 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80', ordre: 1, image_principale: true }
+        { id: Date.now(), url: newPhoto.trim(), ordre: 1, image_principale: true }
       ],
       equipements: [],
       date_creation: new Date().toISOString(),
     };
 
     setLogements((prev) => [newListing, ...prev]);
-    setSuccessMsg(`Logement "${newNom}" ajouté avec succès au catalogue !`);
+    setLastPublishedSlug(generatedSlug);
+    setSuccessMsg(`Logement "${newNom}" publié avec succès au catalogue !`);
     setIsAddModalOpen(false);
 
-    // Reset Form
+    // 2. Réinitialisation complète de tous les champs du formulaire
     setNewNom('');
+    setNewType('APPARTEMENT');
+    setNewVille('Douala');
     setNewQuartier('');
+    setNewPrix('35000');
+    setNewCapacite('4');
+    setNewChambres('2');
+    setNewLits('2');
+    setNewSallesBain('1');
     setNewDescription('');
-    setTimeout(() => setSuccessMsg(null), 6000);
+    setNewPhoto('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80');
+    setFormError(null);
   };
 
   // Mock Host applications submitted via /devenir-hote
@@ -286,16 +313,37 @@ export default function AdminDashboardPage() {
           </button>
         </div>
 
-        {/* Success Alert Banner */}
+        {/* Success Alert Banner with Direct Link */}
         {successMsg && (
-          <div className="bg-emerald-50 border border-emerald-300 text-emerald-900 p-4 rounded-none text-xs font-bold flex items-center justify-between shadow-xs">
+          <div className="bg-emerald-50 border border-emerald-300 text-emerald-900 p-4 rounded-none text-xs font-bold flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
             <div className="flex items-center gap-2">
-              <i className="fa-solid fa-circle-check text-emerald-600 text-base"></i>
+              <i className="fa-solid fa-circle-check text-emerald-600 text-lg shrink-0"></i>
               <span>{successMsg}</span>
             </div>
-            <button onClick={() => setSuccessMsg(null)} className="text-emerald-700 hover:text-emerald-900">
-              <i className="fa-solid fa-xmark"></i>
-            </button>
+            <div className="flex items-center gap-2 shrink-0">
+              {lastPublishedSlug ? (
+                <Link
+                  href={`/logements/${lastPublishedSlug}`}
+                  target="_blank"
+                  className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-none border border-emerald-700 transition-all flex items-center gap-1.5 shadow-xs"
+                >
+                  <i className="fa-solid fa-eye text-xs"></i>
+                  <span>Voir mon logement publié sur le site</span>
+                </Link>
+              ) : (
+                <Link
+                  href="/logements"
+                  target="_blank"
+                  className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-none border border-emerald-700 transition-all flex items-center gap-1.5 shadow-xs"
+                >
+                  <i className="fa-solid fa-eye text-xs"></i>
+                  <span>Voir le catalogue public</span>
+                </Link>
+              )}
+              <button onClick={() => setSuccessMsg(null)} className="text-emerald-700 hover:text-emerald-900 p-1">
+                <i className="fa-solid fa-xmark text-sm"></i>
+              </button>
+            </div>
           </div>
         )}
 
@@ -536,6 +584,19 @@ export default function AdminDashboardPage() {
 
             {/* Modal Form */}
             <form onSubmit={handleAddLogementSubmit} className="space-y-4">
+              
+              {/* Error Alert Banner when missing info */}
+              {formError && (
+                <div className="p-3.5 bg-red-50 border border-red-300 text-red-900 text-xs font-bold flex items-center justify-between shadow-xs">
+                  <div className="flex items-center gap-2">
+                    <i className="fa-solid fa-triangle-exclamation text-red-600 text-base shrink-0"></i>
+                    <span>{formError}</span>
+                  </div>
+                  <button type="button" onClick={() => setFormError(null)} className="text-red-700 hover:text-red-900">
+                    <i className="fa-solid fa-xmark"></i>
+                  </button>
+                </div>
+              )}
               
               {/* Nom du logement */}
               <div>
