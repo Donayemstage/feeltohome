@@ -92,47 +92,16 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Socials & Payment Methods */}
+          {/* Payment Methods */}
           <div className="space-y-4">
-            <h4 className="text-white font-bold text-sm">Réseaux & Médias</h4>
+            <h4 className="text-white font-bold text-sm">Modes de Paiement Acceptés</h4>
             
-            <div className="space-y-2 text-xs">
-              <a
-                href="https://www.facebook.com/profile.php?id=61593313402128&mibextid=rS40aB7S9Ucbxw6v"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2.5 p-2 rounded-none bg-slate-800 hover:bg-blue-600/20 border border-slate-700 hover:border-blue-500/50 transition-all text-slate-200 font-medium"
-              >
-                <i className="fa-brands fa-facebook text-blue-400 text-sm"></i>
-                <span className="truncate">Facebook Officiel</span>
-              </a>
-
-              <a
-                href="https://donayem.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2.5 p-2 rounded-none bg-slate-800 hover:bg-emerald-600/20 border border-slate-700 hover:border-emerald-500/50 transition-all text-slate-200 font-medium"
-              >
-                <i className="fa-brands fa-google text-emerald-400 text-sm"></i>
-                <span className="truncate">Site Google (donayem.com)</span>
-              </a>
-
-              <div className="flex items-center gap-2.5 p-2 rounded-none bg-slate-800 border border-slate-700 text-slate-200 font-medium">
-                <i className="fa-brands fa-tiktok text-pink-400 text-sm"></i>
-                <span className="truncate">TikTok (Donayem Tech)</span>
-              </div>
+            <div className="flex flex-wrap gap-2 text-xs font-bold">
+              <span className="px-3 py-1.5 bg-orange-950/80 text-orange-400 border border-orange-800/60 rounded-none">Orange Money</span>
+              <span className="px-3 py-1.5 bg-yellow-950/80 text-yellow-400 border border-yellow-800/60 rounded-none">MTN MoMo</span>
+              <span className="px-3 py-1.5 bg-blue-950/80 text-blue-400 border border-blue-800/60 rounded-none">Carte Bancaire</span>
+              <span className="px-3 py-1.5 bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 rounded-none">Paiement Arrivée</span>
             </div>
-
-            <div className="pt-2">
-              <span className="text-[10px] uppercase font-bold text-slate-400 block mb-2">Paiements Acceptés</span>
-              <div className="flex flex-wrap gap-1.5 text-[10px] font-bold">
-                <span className="px-2 py-1 bg-orange-950/80 text-orange-400 border border-orange-800/60 rounded-none">Orange Money</span>
-                <span className="px-2 py-1 bg-yellow-950/80 text-yellow-400 border border-yellow-800/60 rounded-none">MTN MoMo</span>
-                <span className="px-2 py-1 bg-blue-950/80 text-blue-400 border border-blue-800/60 rounded-none">Carte Bancaire</span>
-                <span className="px-2 py-1 bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 rounded-none">Arrivée</span>
-              </div>
-            </div>
-
           </div>
         </div>
 

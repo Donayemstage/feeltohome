@@ -115,47 +115,7 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Official Social Media Links Box */}
-            <div className="bg-slate-900 text-white p-6 rounded-none shadow-xs border border-slate-800 space-y-4">
-              <h3 className="font-bold text-sm">{t.contactPage.socialTitle}</h3>
-              
-              <div className="space-y-2.5">
-                <a
-                  href="https://www.facebook.com/profile.php?id=61593313402128&mibextid=rS40aB7S9Ucbxw6v"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-3 rounded-none bg-white/10 hover:bg-blue-600/30 border border-white/10 transition-all text-xs font-semibold"
-                >
-                  <i className="fa-brands fa-facebook text-lg text-blue-400"></i>
-                  <div>
-                    <p className="font-bold">{t.contactPage.facebookTitle}</p>
-                    <p className="text-[10px] text-slate-400">FeelToHome / Donayem Tech</p>
-                  </div>
-                </a>
 
-                <a
-                  href="https://donayem.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-3 rounded-none bg-white/10 hover:bg-emerald-600/30 border border-white/10 transition-all text-xs font-semibold"
-                >
-                  <i className="fa-brands fa-google text-lg text-emerald-400"></i>
-                  <div>
-                    <p className="font-bold">{t.contactPage.googleTitle}</p>
-                    <p className="text-[10px] text-slate-400">Portail Officiel Donayem</p>
-                  </div>
-                </a>
-
-                <div className="flex items-center gap-3 p-3 rounded-none bg-white/10 border border-white/10 text-xs font-semibold">
-                  <i className="fa-brands fa-tiktok text-lg text-pink-400"></i>
-                  <div>
-                    <p className="font-bold">{t.contactPage.tiktokTitle}</p>
-                    <p className="text-[10px] text-brand-300 font-bold">Donayem Tech</p>
-                  </div>
-                </div>
-
-              </div>
-            </div>
 
             {/* Modes de paiement */}
             <div className="bg-white p-6 rounded-none border border-slate-300 shadow-xs space-y-3">
