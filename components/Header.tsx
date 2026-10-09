@@ -109,6 +109,12 @@ export const Header: React.FC = () => {
           >
             {t.nav.contact}
           </Link>
+          <Link
+            href="/devenir-hote"
+            className="px-3 py-1.5 rounded-lg transition-all text-brand-400 font-bold hover:text-brand-300 hover:bg-white/10"
+          >
+            Publier une annonce
+          </Link>
         </nav>
 
         {/* Right Action Menu (Desktop) */}
