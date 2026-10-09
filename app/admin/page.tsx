@@ -89,6 +89,15 @@ export default function AdminDashboardPage() {
               <p className="text-xs text-slate-400">
                 Gestion du catalogue, des propriétaires partenaires et de la plateforme FeelToHome au Cameroun.
               </p>
+              <div className="pt-1 flex items-center gap-2 text-xs text-slate-300">
+                <span className="font-semibold text-slate-400">Compte Admin configuré :</span>
+                <code className="bg-slate-800 text-brand-300 px-2 py-0.5 border border-slate-700 font-mono font-bold">
+                  Username: Donayen (ou Donayem)
+                </code>
+                <code className="bg-slate-800 text-emerald-300 px-2 py-0.5 border border-slate-700 font-mono font-bold">
+                  Password: Donayem12#@
+                </code>
+              </div>
             </div>
 
             <div className="flex items-center gap-3">
