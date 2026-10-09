@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Mail, Lock, LogIn, Info } from 'lucide-react';
 
 export default function ConnexionPage() {
   const [email, setEmail] = useState('');
@@ -16,12 +15,12 @@ export default function ConnexionPage() {
 
   return (
     <div className="min-h-[75vh] flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-2xl border border-slate-200/80 shadow-xl">
+      <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-none border border-slate-300 shadow-xs">
         
         {/* Header Icon & Title */}
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 mx-auto flex items-center justify-center shadow-inner">
-            <span className="material-symbols-outlined text-[28px]">roofing</span>
+          <div className="w-12 h-12 rounded-none bg-brand-50 text-brand-600 mx-auto flex items-center justify-center border border-brand-200">
+            <i className="fa-solid fa-house-chimney text-xl"></i>
           </div>
           <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
             Connexion
@@ -33,79 +32,75 @@ export default function ConnexionPage() {
 
         {/* Info Banner for Phase 1 */}
         {notice && (
-          <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-start gap-3">
-            <Info className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          <div className="p-4 rounded-none bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-start gap-3">
+            <i className="fa-solid fa-circle-info text-amber-600 text-base shrink-0 mt-0.5"></i>
             <div>
               <span className="font-bold">Fonctionnalité bientôt disponible :</span>
               <p className="mt-0.5 text-amber-700">
-                Le système d'authentification complète sera activé lors de la prochaine phase. Vos identifiants ne sont pas enregistrés à ce stade.
+                La connexion par identifiants uniques sera active lors de la mise en production officielle des comptes utilisateurs.
               </p>
             </div>
           </div>
         )}
 
-        {/* LoginForm */}
+        {/* Connexion Form (Square Borders) */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="space-y-1">
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Adresse e-mail
+          <div>
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+              Adresse e-mail ou téléphone
             </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i className="fa-solid fa-envelope text-xs"></i>
+              </div>
               <input
-                type="email"
+                type="text"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="votre.email@exemple.cm"
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all"
+                placeholder="votre.email@exemple.com ou 696..."
+                className="w-full pl-10 pr-4 py-3 text-sm rounded-none border border-slate-300 focus:outline-none focus:border-brand-500 bg-slate-50 font-semibold text-slate-800"
               />
             </div>
           </div>
 
-          <div className="space-y-1">
-            <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-2">
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                 Mot de passe
               </label>
-              <button
-                type="button"
-                onClick={() => setNotice(true)}
-                className="text-xs text-brand-600 hover:text-brand-700 font-semibold"
-              >
-                Mot de passe oublié ?
-              </button>
+              <a href="#" className="text-[11px] font-semibold text-brand-600 hover:underline">
+                Oublié ?
+              </a>
             </div>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i className="fa-solid fa-lock text-xs"></i>
+              </div>
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all"
+                className="w-full pl-10 pr-4 py-3 text-sm rounded-none border border-slate-300 focus:outline-none focus:border-brand-500 bg-slate-50 font-semibold text-slate-800"
               />
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-brand-500 hover:bg-brand-600 active:scale-98 text-white font-bold text-sm rounded-xl shadow-lg shadow-brand-500/25 transition-all flex items-center justify-center gap-2"
+            className="w-full py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs rounded-none shadow-xs transition-all flex items-center justify-center gap-2 border border-brand-600 active:scale-98"
           >
-            <LogIn className="w-4 h-4" />
+            <i className="fa-solid fa-right-to-bracket text-xs"></i>
             <span>Se connecter</span>
           </button>
         </form>
 
-        {/* Footer Link */}
-        <div className="pt-4 border-t border-slate-100 text-center text-xs text-slate-600">
-          Vous n'avez pas encore de compte ?{' '}
-          <Link
-            href="/inscription"
-            className="font-bold text-brand-600 hover:text-brand-700 underline underline-offset-2"
-          >
-            Inscription
+        <div className="text-center pt-4 border-t border-slate-200 text-xs text-slate-600">
+          <span>Vous n'avez pas encore de compte ? </span>
+          <Link href="/inscription" className="font-bold text-brand-600 hover:underline">
+            S'inscrire gratuitement
           </Link>
         </div>
 
