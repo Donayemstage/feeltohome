@@ -57,20 +57,20 @@ export const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         {/* Logo with FontAwesome Icon */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-brand-500 text-white flex items-center justify-center shadow-md shadow-brand-500/30 group-hover:bg-brand-600 transition-colors">
-            <i className="fa-solid fa-house-chimney text-lg"></i>
+        <Link href="/" className="flex items-center gap-2 group">
+          <div className="w-8 h-8 rounded-lg bg-brand-500 text-white flex items-center justify-center shadow-xs group-hover:bg-brand-600 transition-colors">
+            <i className="fa-solid fa-house-chimney text-base"></i>
           </div>
-          <span className="text-xl font-extrabold tracking-tight text-slate-900 group-hover:text-brand-600 transition-colors">
+          <span className="text-lg font-bold tracking-tight text-slate-900 group-hover:text-brand-600 transition-colors">
             FeelToHome
           </span>
         </Link>
 
         {/* Desktop Navigation with Active Page Highlight ("foncer") */}
-        <nav className="hidden md:flex items-center gap-2 text-sm font-semibold">
+        <nav className="hidden md:flex items-center gap-1.5 text-xs font-semibold">
           <Link
             href="/"
-            className={`px-3.5 py-1.5 rounded-lg transition-all ${
+            className={`px-3 py-1.5 rounded-md transition-all ${
               isActive('/')
                 ? 'bg-slate-900 text-white font-bold shadow-xs'
                 : 'text-slate-700 hover:text-brand-600 hover:bg-slate-100'
@@ -81,7 +81,7 @@ export const Header: React.FC = () => {
 
           <Link
             href="/logements"
-            className={`px-3.5 py-1.5 rounded-lg transition-all ${
+            className={`px-3 py-1.5 rounded-md transition-all ${
               isActive('/logements')
                 ? 'bg-slate-900 text-white font-bold shadow-xs'
                 : 'text-slate-700 hover:text-brand-600 hover:bg-slate-100'
@@ -92,7 +92,7 @@ export const Header: React.FC = () => {
 
           <Link
             href="/a-propos"
-            className={`px-3.5 py-1.5 rounded-lg transition-all ${
+            className={`px-3 py-1.5 rounded-md transition-all ${
               isActive('/a-propos')
                 ? 'bg-slate-900 text-white font-bold shadow-xs'
                 : 'text-slate-700 hover:text-brand-600 hover:bg-slate-100'
@@ -103,7 +103,7 @@ export const Header: React.FC = () => {
 
           <Link
             href="/contact"
-            className={`px-3.5 py-1.5 rounded-lg transition-all ${
+            className={`px-3 py-1.5 rounded-md transition-all ${
               isActive('/contact')
                 ? 'bg-slate-900 text-white font-bold shadow-xs'
                 : 'text-slate-700 hover:text-brand-600 hover:bg-slate-100'
@@ -114,13 +114,13 @@ export const Header: React.FC = () => {
 
           <Link
             href="/devenir-hote"
-            className={`px-3.5 py-1.5 rounded-xl transition-all font-bold flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg transition-all font-bold flex items-center gap-1.5 ${
               isActive('/devenir-hote')
                 ? 'bg-brand-700 text-white font-bold shadow-sm'
                 : 'text-brand-600 hover:text-brand-700 bg-brand-50 hover:bg-brand-100/80 border border-brand-200/60'
             }`}
           >
-            <i className="fa-solid fa-circle-plus text-sm"></i>
+            <i className="fa-solid fa-circle-plus text-xs"></i>
             <span>{t.nav.publishListing}</span>
           </Link>
         </nav>
@@ -262,11 +262,11 @@ export const Header: React.FC = () => {
 
       {/* Mobile Drawer Menu with Active Route Highlighting ("foncer") */}
       {isMenuOpen && (
-        <div className="md:hidden border-b border-slate-200 bg-white text-slate-900 px-4 pt-2 pb-6 space-y-2.5 shadow-xl">
+        <div className="md:hidden border-b border-slate-200 bg-white text-slate-900 px-4 pt-2 pb-6 space-y-2 shadow-xl">
           <Link
             href="/"
             onClick={() => setIsMenuOpen(false)}
-            className={`block px-3.5 py-2 text-sm rounded-xl transition-all ${
+            className={`block px-3.5 py-2 text-xs rounded-xl transition-all ${
               isActive('/')
                 ? 'bg-slate-900 text-white font-bold'
                 : 'text-slate-800 font-semibold hover:bg-slate-100'
@@ -277,7 +277,7 @@ export const Header: React.FC = () => {
           <Link
             href="/logements"
             onClick={() => setIsMenuOpen(false)}
-            className={`block px-3.5 py-2 text-sm rounded-xl transition-all ${
+            className={`block px-3.5 py-2 text-xs rounded-xl transition-all ${
               isActive('/logements')
                 ? 'bg-slate-900 text-white font-bold'
                 : 'text-slate-800 font-semibold hover:bg-slate-100'
@@ -288,7 +288,7 @@ export const Header: React.FC = () => {
           <Link
             href="/a-propos"
             onClick={() => setIsMenuOpen(false)}
-            className={`block px-3.5 py-2 text-sm rounded-xl transition-all ${
+            className={`block px-3.5 py-2 text-xs rounded-xl transition-all ${
               isActive('/a-propos')
                 ? 'bg-slate-900 text-white font-bold'
                 : 'text-slate-800 font-semibold hover:bg-slate-100'
@@ -299,7 +299,7 @@ export const Header: React.FC = () => {
           <Link
             href="/contact"
             onClick={() => setIsMenuOpen(false)}
-            className={`block px-3.5 py-2 text-sm rounded-xl transition-all ${
+            className={`block px-3.5 py-2 text-xs rounded-xl transition-all ${
               isActive('/contact')
                 ? 'bg-slate-900 text-white font-bold'
                 : 'text-slate-800 font-semibold hover:bg-slate-100'
@@ -310,7 +310,7 @@ export const Header: React.FC = () => {
           <Link
             href="/devenir-hote"
             onClick={() => setIsMenuOpen(false)}
-            className={`block px-3.5 py-2 text-sm rounded-xl transition-all ${
+            className={`block px-3.5 py-2 text-xs rounded-xl transition-all ${
               isActive('/devenir-hote')
                 ? 'bg-brand-600 text-white font-bold'
                 : 'text-brand-600 bg-brand-50 font-bold hover:bg-brand-100'
