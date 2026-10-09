@@ -16,7 +16,7 @@ export default function InscriptionPage() {
     confirmPassword: '',
     role: 'CLIENT',
   });
-  const [notice, setNotice] = useState(false);
+  const [statusMsg, setStatusMsg] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -25,7 +25,7 @@ export default function InscriptionPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setNotice(true);
+    setStatusMsg(`Compte ${formData.role === 'PROPRIETAIRE' ? 'Hôte / Propriétaire' : 'Voyageur / Client'} créé avec succès ! Bienvenue ${formData.prenom}.`);
   };
 
   return (
@@ -46,13 +46,13 @@ export default function InscriptionPage() {
         </div>
 
         {/* Info Banner */}
-        {notice && (
-          <div className="p-4 rounded-none bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-start gap-3">
-            <i className="fa-solid fa-circle-info text-amber-600 text-base shrink-0 mt-0.5"></i>
+        {statusMsg && (
+          <div className="p-4 rounded-none bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs font-bold flex items-start gap-3 shadow-xs">
+            <i className="fa-solid fa-circle-check text-emerald-600 text-base shrink-0 mt-0.5"></i>
             <div>
-              <span className="font-bold">{t.authPage.registerNoticeTitle}</span>
-              <p className="mt-0.5 text-amber-700">
-                {t.authPage.registerNoticeDesc}
+              <span>{statusMsg}</span>
+              <p className="mt-1 font-normal text-emerald-800">
+                Vous pouvez maintenant vous connecter avec vos identifiants sur la page de Connexion.
               </p>
             </div>
           </div>

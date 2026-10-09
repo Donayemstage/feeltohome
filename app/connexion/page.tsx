@@ -87,33 +87,22 @@ export default function ConnexionPage() {
           </div>
         )}
 
-        {/* Quick Admin Helper Badge */}
-        <div className="bg-slate-100 p-3 border border-slate-200 text-[11px] text-slate-600 space-y-1">
-          <div className="font-bold text-slate-800 flex items-center gap-1.5">
-            <i className="fa-solid fa-user-shield text-brand-600"></i>
-            <span>Connexion Administrateur :</span>
-          </div>
-          <p>
-            Entrez <strong>Donayen</strong> (ou <strong>Donayem</strong>) avec le mot de passe <strong>Donayem12#@</strong> pour être redirigé directement vers le Tableau de bord Admin.
-          </p>
-        </div>
-
         {/* Connexion Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-              {t.authPage.emailOrPhoneLabel}
+              Adresse e-mail, téléphone ou Nom d'utilisateur
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <i className="fa-solid fa-envelope text-xs"></i>
+                <i className="fa-solid fa-user text-xs"></i>
               </div>
               <input
                 type="text"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="votre.email@exemple.com"
+                placeholder="Ex: Donayen, ou votre.email@exemple.com"
                 className="w-full pl-10 pr-4 py-3 text-sm rounded-none border border-slate-300 focus:outline-none focus:border-brand-500 bg-slate-50 font-semibold text-slate-800"
               />
             </div>
