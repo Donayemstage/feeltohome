@@ -165,7 +165,7 @@ export default function AProposPage() {
               </p>
               <p className="text-xs text-slate-300 flex items-center gap-2 pt-1">
                 <i className="fa-solid fa-phone text-brand-400 shrink-0"></i>
-                <span>{t.aboutPage.headquartersLines} 696580487 / 690247390 / 681181456</span>
+                <span>{t.aboutPage.headquartersLines} 696580487 / 681181456</span>
               </p>
             </div>
 

@@ -41,7 +41,7 @@ export const Footer: React.FC = () => {
               <p className="flex items-start gap-2">
                 <i className="fa-solid fa-phone text-brand-500 shrink-0 mt-0.5"></i>
                 <span className="font-semibold text-slate-200">
-                  <a href="tel:+237696580487" className="hover:text-brand-400">696580487</a> / <a href="tel:+237690247390" className="hover:text-brand-400">690247390</a> / <a href="tel:+237681181456" className="hover:text-brand-400">681181456</a>
+                  <a href="tel:+237696580487" className="hover:text-brand-400">696580487</a> / <a href="tel:+237681181456" className="hover:text-brand-400">681181456</a>
                 </span>
               </p>
             </div>

@@ -79,17 +79,6 @@ export default function ContactPage() {
                 </a>
 
                 <a
-                  href="tel:+237690247390"
-                  className="flex items-center justify-between p-3 rounded-none bg-slate-50 hover:bg-brand-50 hover:border-brand-300 border border-slate-200 transition-all text-xs font-bold text-slate-800 group"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-none bg-emerald-500"></span>
-                    <span>+237 690 24 73 90</span>
-                  </div>
-                  <span className="text-[10px] text-brand-600 font-extrabold group-hover:translate-x-0.5 transition-transform">Appeler / WhatsApp &rarr;</span>
-                </a>
-
-                <a
                   href="tel:+237681181456"
                   className="flex items-center justify-between p-3 rounded-none bg-slate-50 hover:bg-brand-50 hover:border-brand-300 border border-slate-200 transition-all text-xs font-bold text-slate-800 group"
                 >
