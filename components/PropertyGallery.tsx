@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { PhotoData } from '@/lib/api';
+import { PhotoData, formatImageUrl } from '@/lib/api';
 
 interface GalleryProps {
   photos: PhotoData[];
@@ -15,7 +15,7 @@ export const PropertyGallery: React.FC<GalleryProps> = ({ photos, propertyName }
 
   // Fallback image if 0 photos
   const fallbackUrl = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80';
-  const photoUrls = photos.length > 0 ? photos.map(p => p.url) : [fallbackUrl];
+  const photoUrls = photos.length > 0 ? photos.map(p => formatImageUrl(p.url)) : [fallbackUrl];
   const count = photoUrls.length;
 
   const handleNext = useCallback(() => {

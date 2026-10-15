@@ -5,16 +5,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from './LanguageContext';
 import { useFavorites } from './FavoritesContext';
-import { LogementData } from '@/lib/api';
+import { LogementData, formatImageUrl } from '@/lib/api';
 
 export const ListingCard: React.FC<{ listing: LogementData; priority?: boolean }> = ({ listing, priority = false }) => {
   const { t } = useLanguage();
   const { isSaved, toggleFavorite } = useFavorites();
   const saved = isSaved(listing.slug);
 
-  const photoUrl = listing.photos && listing.photos.length > 0
-    ? listing.photos[0].url
-    : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80';
+  const rawUrl = listing.photos && listing.photos.length > 0 ? listing.photos[0].url : undefined;
+  const photoUrl = formatImageUrl(rawUrl);
 
   const numericPrice = typeof listing.prix_par_nuit === 'number'
     ? listing.prix_par_nuit
