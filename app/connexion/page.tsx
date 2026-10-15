@@ -85,6 +85,9 @@ export default function ConnexionPage() {
         {/* Dynamic Status / Success / Error Banner */}
         {statusMsg && (
           <div
+            role="alert"
+            aria-live="polite"
+            id="login-status-msg"
             className={`p-4 rounded-none border text-xs flex items-start gap-3 ${
               statusMsg.type === 'success'
                 ? 'bg-emerald-50 border-emerald-300 text-emerald-900 font-bold'
@@ -95,6 +98,7 @@ export default function ConnexionPage() {
               className={`fa-solid ${
                 statusMsg.type === 'success' ? 'fa-circle-check text-emerald-600' : 'fa-triangle-exclamation text-red-600'
               } text-base shrink-0 mt-0.5`}
+              aria-hidden="true"
             ></i>
             <div>
               <span>{statusMsg.text}</span>
@@ -105,19 +109,22 @@ export default function ConnexionPage() {
         {/* Connexion Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+            <label htmlFor="login-identifier" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
               Adresse e-mail, téléphone ou Nom d'utilisateur
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <i className="fa-solid fa-user text-xs"></i>
+                <i className="fa-solid fa-user text-xs" aria-hidden="true"></i>
               </div>
               <input
+                id="login-identifier"
                 type="text"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Ex: Donayen, ou votre.email@exemple.com"
+                aria-describedby={statusMsg ? 'login-status-msg' : undefined}
+                aria-invalid={statusMsg?.type === 'error'}
                 className="w-full pl-10 pr-4 py-3 text-sm rounded-none border border-slate-300 focus:outline-none focus:border-brand-500 bg-slate-50 font-semibold text-slate-800"
               />
             </div>
@@ -125,7 +132,7 @@ export default function ConnexionPage() {
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+              <label htmlFor="login-password" className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                 {t.authPage.passwordLabel}
               </label>
               <a href="#" className="text-[11px] font-semibold text-brand-600 hover:underline">
@@ -134,23 +141,27 @@ export default function ConnexionPage() {
             </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <i className="fa-solid fa-lock text-xs"></i>
+                <i className="fa-solid fa-lock text-xs" aria-hidden="true"></i>
               </div>
               <input
+                id="login-password"
                 type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
+                aria-describedby={statusMsg ? 'login-status-msg' : undefined}
+                aria-invalid={statusMsg?.type === 'error'}
                 className="w-full pl-10 pr-10 py-3 text-sm rounded-none border border-slate-300 focus:outline-none focus:border-brand-500 bg-slate-50 font-semibold text-slate-800"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
                 className="absolute inset-y-0 right-0 px-3 flex items-center gap-1.5 text-slate-500 hover:text-brand-600 cursor-pointer z-10 select-none"
                 title={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
               >
-                <i className={`fa-solid ${showPassword ? 'fa-eye-slash text-brand-600 text-sm' : 'fa-eye text-slate-400 text-sm'}`}></i>
+                <i className={`fa-solid ${showPassword ? 'fa-eye-slash text-brand-600 text-sm' : 'fa-eye text-slate-400 text-sm'}`} aria-hidden="true"></i>
                 <span className="text-[11px] font-bold uppercase text-slate-600 hover:text-brand-600">{showPassword ? 'Masquer' : 'Afficher'}</span>
               </button>
             </div>

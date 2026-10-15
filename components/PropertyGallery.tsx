@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { PhotoData } from '@/lib/api';
 
 interface GalleryProps {
@@ -42,12 +43,14 @@ export const PropertyGallery: React.FC<GalleryProps> = ({ photos, propertyName }
     <div className="space-y-3">
       {/* Main Image (Square) */}
       <div className="relative h-64 sm:h-96 w-full bg-slate-900 rounded-none overflow-hidden shadow-xs group border border-slate-300">
-        <img
-          src={photoUrls[selectedIndex]}
+        <Image
+          src={photoUrls[selectedIndex] || fallbackUrl}
           alt={`${propertyName} - Photo ${selectedIndex + 1}`}
-          onError={(e) => { e.currentTarget.src = fallbackUrl; }}
+          fill
+          priority={selectedIndex === 0}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
           onClick={() => setIsLightboxOpen(true)}
-          className="w-full h-full object-cover cursor-pointer group-hover:scale-102 transition-transform duration-300 rounded-none"
+          className="object-cover cursor-pointer group-hover:scale-102 transition-transform duration-300 rounded-none"
         />
 
         {/* Prev / Next controls */}
@@ -88,7 +91,13 @@ export const PropertyGallery: React.FC<GalleryProps> = ({ photos, propertyName }
                 selectedIndex === idx ? 'border-brand-500 shadow-xs' : 'border-slate-200 opacity-70 hover:opacity-100'
               }`}
             >
-              <img src={url} alt={`Vignette ${idx + 1}`} className="w-full h-full object-cover" />
+              <Image
+                src={url}
+                alt={`Vignette ${idx + 1}`}
+                fill
+                sizes="80px"
+                className="object-cover"
+              />
             </button>
           ))}
         </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useLanguage } from './LanguageContext';
 
 interface ReserveButtonProps {
@@ -20,7 +20,70 @@ export const ReserveButton: React.FC<ReserveButtonProps> = ({
 }) => {
   const { locale, t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
-  
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
+  // Modal accessibility: body scroll lock, focus trap, and Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const timer = setTimeout(() => {
+      closeButtonRef.current?.focus();
+    }, 50);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        handleClose();
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        if (!modalRef.current) return;
+        const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const focusable = Array.from(focusableElements).filter(
+          (el) => !el.hasAttribute('disabled') && el.offsetParent !== null
+        );
+
+        if (focusable.length === 0) return;
+
+        const firstElement = focusable[0];
+        const lastElement = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      clearTimeout(timer);
+      document.body.style.overflow = originalOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+      triggerRef.current?.focus();
+    };
+  }, [isOpen, handleClose]);
+
   const today = new Date().toISOString().split('T')[0];
   const tomorrowObj = new Date();
   tomorrowObj.setDate(tomorrowObj.getDate() + 1);
@@ -72,17 +135,31 @@ export const ReserveButton: React.FC<ReserveButtonProps> = ({
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setIsOpen(true)}
         className={className}
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
       >
         {children || t.detail.reserveNow}
       </button>
 
       {/* Interactive Reservation Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white text-slate-900 w-full max-w-lg rounded-none shadow-2xl border border-slate-300 overflow-hidden animate-in fade-in duration-200">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) handleClose();
+          }}
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
+          <div
+            ref={modalRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="reserve-modal-title"
+            className="bg-white text-slate-900 w-full max-w-lg rounded-none shadow-2xl border border-slate-300 overflow-hidden animate-in fade-in duration-200"
+          >
             
             {/* Modal Header */}
             <div className="bg-slate-900 text-white p-5 flex items-center justify-between border-b border-slate-800">
@@ -90,14 +167,22 @@ export const ReserveButton: React.FC<ReserveButtonProps> = ({
                 <span className="text-[10px] uppercase font-bold text-brand-400 tracking-wider">
                   {locale === 'fr' ? 'Réservation Directe' : locale === 'en' ? 'Direct Booking' : 'Direktbuchung'}
                 </span>
-                <h3 className="text-base font-extrabold truncate max-w-xs">{propertyName}</h3>
+                <h3 id="reserve-modal-title" className="text-base font-extrabold truncate max-w-xs">{propertyName}</h3>
               </div>
               <button
+                ref={closeButtonRef}
                 type="button"
-                onClick={() => setIsOpen(false)}
-                className="w-8 h-8 rounded-none bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors cursor-pointer"
+                onClick={handleClose}
+                aria-label={
+                  locale === 'fr'
+                    ? 'Fermer la fenêtre de réservation'
+                    : locale === 'en'
+                    ? 'Close booking dialog'
+                    : 'Buchungsfenster schließen'
+                }
+                className="w-8 h-8 rounded-none bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-white"
               >
-                <i className="fa-solid fa-xmark text-sm"></i>
+                <i className="fa-solid fa-xmark text-sm" aria-hidden="true"></i>
               </button>
             </div>
 
@@ -119,10 +204,11 @@ export const ReserveButton: React.FC<ReserveButtonProps> = ({
               {/* Dates & Guests Inputs */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div>
-                  <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  <label htmlFor="reserve-checkin" className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
                     {t.hero.checkIn}
                   </label>
                   <input
+                    id="reserve-checkin"
                     type="date"
                     value={checkIn}
                     onChange={(e) => setCheckIn(e.target.value)}
@@ -130,10 +216,11 @@ export const ReserveButton: React.FC<ReserveButtonProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  <label htmlFor="reserve-checkout" className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
                     {t.hero.checkOut}
                   </label>
                   <input
+                    id="reserve-checkout"
                     type="date"
                     value={checkOut}
                     onChange={(e) => setCheckOut(e.target.value)}
@@ -144,10 +231,11 @@ export const ReserveButton: React.FC<ReserveButtonProps> = ({
 
               {/* Guests Count Selector */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                <label htmlFor="reserve-guests" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
                   {t.hero.guests}
                 </label>
                 <select
+                  id="reserve-guests"
                   value={guests}
                   onChange={(e) => setGuests(e.target.value)}
                   className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-none text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-500 cursor-pointer"
@@ -161,13 +249,15 @@ export const ReserveButton: React.FC<ReserveButtonProps> = ({
               </div>
 
               {/* Payment Option Selector */}
-              <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+              <fieldset className="border-none p-0 m-0 space-y-2">
+                <legend className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                   {locale === 'fr' ? 'Mode de paiement' : locale === 'en' ? 'Payment method' : 'Zahlungsmethode'}
-                </label>
-                <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
+                </legend>
+                <div role="radiogroup" aria-label={locale === 'fr' ? 'Mode de paiement' : 'Payment method'} className="grid grid-cols-2 gap-2 text-xs font-semibold">
                   <button
                     type="button"
+                    role="radio"
+                    aria-checked={paymentMethod === 'ORANGE_MONEY'}
                     onClick={() => setPaymentMethod('ORANGE_MONEY')}
                     className={`p-2.5 border text-left rounded-none transition-all flex items-center gap-2 cursor-pointer ${
                       paymentMethod === 'ORANGE_MONEY'
@@ -175,12 +265,14 @@ export const ReserveButton: React.FC<ReserveButtonProps> = ({
                         : 'border-slate-200 bg-slate-50 text-slate-700'
                     }`}
                   >
-                    <span className="w-2 h-2 rounded-none bg-orange-500"></span>
+                    <span className="w-2 h-2 rounded-none bg-orange-500" aria-hidden="true"></span>
                     <span>Orange Money</span>
                   </button>
 
                   <button
                     type="button"
+                    role="radio"
+                    aria-checked={paymentMethod === 'MTN_MOMO'}
                     onClick={() => setPaymentMethod('MTN_MOMO')}
                     className={`p-2.5 border text-left rounded-none transition-all flex items-center gap-2 cursor-pointer ${
                       paymentMethod === 'MTN_MOMO'
@@ -188,12 +280,14 @@ export const ReserveButton: React.FC<ReserveButtonProps> = ({
                         : 'border-slate-200 bg-slate-50 text-slate-700'
                     }`}
                   >
-                    <span className="w-2 h-2 rounded-none bg-yellow-500"></span>
+                    <span className="w-2 h-2 rounded-none bg-yellow-500" aria-hidden="true"></span>
                     <span>MTN MoMo</span>
                   </button>
 
                   <button
                     type="button"
+                    role="radio"
+                    aria-checked={paymentMethod === 'CARTE_BANCAIRE'}
                     onClick={() => setPaymentMethod('CARTE_BANCAIRE')}
                     className={`p-2.5 border text-left rounded-none transition-all flex items-center gap-2 cursor-pointer ${
                       paymentMethod === 'CARTE_BANCAIRE'
@@ -201,12 +295,14 @@ export const ReserveButton: React.FC<ReserveButtonProps> = ({
                         : 'border-slate-200 bg-slate-50 text-slate-700'
                     }`}
                   >
-                    <i className="fa-solid fa-credit-card text-xs"></i>
+                    <i className="fa-solid fa-credit-card text-xs" aria-hidden="true"></i>
                     <span>Carte Bancaire</span>
                   </button>
 
                   <button
                     type="button"
+                    role="radio"
+                    aria-checked={paymentMethod === 'CASH_ARRIVEE'}
                     onClick={() => setPaymentMethod('CASH_ARRIVEE')}
                     className={`p-2.5 border text-left rounded-none transition-all flex items-center gap-2 cursor-pointer ${
                       paymentMethod === 'CASH_ARRIVEE'
@@ -214,11 +310,11 @@ export const ReserveButton: React.FC<ReserveButtonProps> = ({
                         : 'border-slate-200 bg-slate-50 text-slate-700'
                     }`}
                   >
-                    <i className="fa-solid fa-money-bill-wave text-xs"></i>
+                    <i className="fa-solid fa-money-bill-wave text-xs" aria-hidden="true"></i>
                     <span>Cash (Arrivée)</span>
                   </button>
                 </div>
-              </div>
+              </fieldset>
 
               {/* Automatic Total Calculation Box */}
               {formattedTotal && (

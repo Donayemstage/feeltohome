@@ -4,9 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from './LanguageContext';
+import { useFavorites } from './FavoritesContext';
 
 export const MobileBottomNav: React.FC = () => {
   const { t } = useLanguage();
+  const { savedCount, isLoaded } = useFavorites();
   const pathname = usePathname();
 
   return (
@@ -34,11 +36,19 @@ export const MobileBottomNav: React.FC = () => {
 
         <Link
           href="/enregistres"
-          className={`flex flex-col items-center justify-center gap-1 w-16 h-12 transition-colors ${
+          className={`flex flex-col items-center justify-center gap-1 w-16 h-12 transition-colors relative ${
             pathname === '/enregistres' ? 'text-slate-900 font-extrabold' : 'text-slate-500 hover:text-slate-800'
           }`}
+          aria-label={`${t.nav.saved}${isLoaded && savedCount > 0 ? ` (${savedCount})` : ''}`}
         >
-          <i className="fa-solid fa-heart text-base"></i>
+          <div className="relative">
+            <i className="fa-solid fa-heart text-base"></i>
+            {isLoaded && savedCount > 0 && (
+              <span className="absolute -top-1.5 -right-2.5 bg-red-500 text-white text-[9px] font-bold px-1 rounded-full min-w-[14px] h-[14px] flex items-center justify-center leading-none">
+                {savedCount > 99 ? '99+' : savedCount}
+              </span>
+            )}
+          </div>
           <span className="text-[10px] font-semibold">{t.nav.saved}</span>
         </Link>
 

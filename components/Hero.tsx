@@ -1,14 +1,16 @@
 'use client';
 
 import React from 'react';
+import { preload } from 'react-dom';
 import { useLanguage } from './LanguageContext';
 import { SearchBox } from './SearchBox';
 
 export const Hero: React.FC = () => {
+  preload('/images/hero-bg.webp', { as: 'image', type: 'image/webp' });
   const { t } = useLanguage();
 
   return (
-    <section className="relative w-full bg-slate-900 min-h-[520px] lg:min-h-[580px] flex items-center py-10 lg:py-16 px-4 sm:px-6 lg:px-8 bg-[url('/images/hero-bg.png')] bg-cover bg-[position:65%_center] md:bg-[position:right_center]">
+    <section className="relative w-full bg-slate-900 min-h-[520px] lg:min-h-[580px] flex items-center py-10 lg:py-16 px-4 sm:px-6 lg:px-8 bg-[url('/images/hero-bg.webp')] bg-cover bg-[position:65%_center] md:bg-[position:right_center]">
       {/* 
         Subtle Overlay Gradient:
         - Dark navy gradient for text & search box legibility

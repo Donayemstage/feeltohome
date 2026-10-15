@@ -119,7 +119,7 @@ export default function ContactPage() {
 
             {/* Modes de paiement */}
             <div className="bg-white p-6 rounded-none border border-slate-300 shadow-xs space-y-3">
-              <h4 className="font-bold text-xs uppercase text-slate-400 tracking-wider">{t.contactPage.paymentsTitle}</h4>
+              <h4 className="font-extrabold text-xs uppercase text-slate-600 tracking-wider">{t.contactPage.paymentsTitle}</h4>
               <div className="grid grid-cols-2 gap-2 text-[11px] font-bold text-slate-800">
                 <div className="p-2.5 rounded-none bg-orange-50 text-orange-700 border border-orange-200 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-none bg-orange-500"></span>
@@ -154,15 +154,16 @@ export default function ContactPage() {
               </div>
 
               {submitted ? (
-                <div className="p-8 rounded-none bg-emerald-50 border border-emerald-300 text-center space-y-3 animate-in fade-in">
+                <div role="alert" aria-live="polite" className="p-8 rounded-none bg-emerald-50 border border-emerald-300 text-center space-y-3 animate-in fade-in">
                   <div className="w-12 h-12 bg-emerald-500 text-white rounded-none flex items-center justify-center mx-auto shadow-xs">
-                    <i className="fa-solid fa-check text-xl"></i>
+                    <i className="fa-solid fa-check text-xl" aria-hidden="true"></i>
                   </div>
                   <h3 className="text-lg font-bold text-emerald-900">{t.contactPage.successTitle}</h3>
                   <p className="text-xs text-emerald-700 max-w-md mx-auto leading-relaxed">
                     {t.contactPage.successDesc}
                   </p>
                   <button
+                    type="button"
                     onClick={() => setSubmitted(false)}
                     className="mt-4 px-5 py-2.5 bg-emerald-600 text-white font-bold text-xs rounded-none hover:bg-emerald-700 transition-colors border border-emerald-700"
                   >
@@ -173,10 +174,11 @@ export default function ContactPage() {
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                      <label htmlFor="contact-nom" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                         {t.contactPage.fullNameLabel}
                       </label>
                       <input
+                        id="contact-nom"
                         type="text"
                         required
                         placeholder="Ex: Jean Dupont"
@@ -187,10 +189,11 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                      <label htmlFor="contact-telephone" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                         {t.contactPage.phoneLabel}
                       </label>
                       <input
+                        id="contact-telephone"
                         type="tel"
                         required
                         placeholder="Ex: 696580487"
@@ -203,10 +206,11 @@ export default function ContactPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                      <label htmlFor="contact-email" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                         {t.contactPage.emailLabelInput}
                       </label>
                       <input
+                        id="contact-email"
                         type="email"
                         placeholder="votre.email@exemple.com"
                         value={formData.email}
@@ -216,10 +220,11 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                      <label htmlFor="contact-sujet" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                         {t.contactPage.subjectLabel}
                       </label>
                       <select
+                        id="contact-sujet"
                         value={formData.sujet}
                         onChange={(e) => setFormData({ ...formData, sujet: e.target.value })}
                         className="w-full px-4 py-3 text-sm rounded-none border border-slate-300 focus:outline-none focus:border-brand-500 bg-slate-50 font-bold text-slate-800 cursor-pointer"
@@ -233,10 +238,11 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                    <label htmlFor="contact-message" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                       {t.contactPage.messageLabel}
                     </label>
                     <textarea
+                      id="contact-message"
                       required
                       rows={5}
                       placeholder="..."

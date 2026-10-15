@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from logements.views import HealthCheckView, LogementListView, LogementDetailView, EquipementListView
@@ -10,6 +10,7 @@ urlpatterns = [
     path('api/logements/', LogementListView.as_view(), name='logement-list'),
     path('api/logements/<slug:slug>/', LogementDetailView.as_view(), name='logement-detail'),
     path('api/equipements/', EquipementListView.as_view(), name='equipement-list'),
+    path('api/reservations/', include('reservations.urls')),
 ]
 
 if settings.DEBUG:

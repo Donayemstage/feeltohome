@@ -48,8 +48,8 @@ export default function InscriptionPage() {
 
         {/* Info Banner */}
         {statusMsg && (
-          <div className="p-4 rounded-none bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs font-bold flex items-start gap-3 shadow-xs">
-            <i className="fa-solid fa-circle-check text-emerald-600 text-base shrink-0 mt-0.5"></i>
+          <div role="alert" aria-live="polite" className="p-4 rounded-none bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs font-bold flex items-start gap-3 shadow-xs">
+            <i className="fa-solid fa-circle-check text-emerald-600 text-base shrink-0 mt-0.5" aria-hidden="true"></i>
             <div>
               <span>{statusMsg}</span>
               <p className="mt-1 font-normal text-emerald-800">
@@ -60,9 +60,11 @@ export default function InscriptionPage() {
         )}
 
         {/* Role Selector Tabs */}
-        <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-none border border-slate-200">
+        <div role="radiogroup" aria-label="Type de compte" className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-none border border-slate-200">
           <button
             type="button"
+            role="radio"
+            aria-checked={formData.role === 'CLIENT'}
             onClick={() => setFormData({ ...formData, role: 'CLIENT' })}
             className={`py-2 text-xs font-bold rounded-none transition-all flex items-center justify-center gap-1.5 ${
               formData.role === 'CLIENT'
@@ -70,11 +72,13 @@ export default function InscriptionPage() {
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <i className="fa-solid fa-user text-xs"></i>
+            <i className="fa-solid fa-user text-xs" aria-hidden="true"></i>
             <span>{t.authPage.clientRole}</span>
           </button>
           <button
             type="button"
+            role="radio"
+            aria-checked={formData.role === 'PROPRIETAIRE'}
             onClick={() => setFormData({ ...formData, role: 'PROPRIETAIRE' })}
             className={`py-2 text-xs font-bold rounded-none transition-all flex items-center justify-center gap-1.5 ${
               formData.role === 'PROPRIETAIRE'
@@ -82,7 +86,7 @@ export default function InscriptionPage() {
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <i className="fa-solid fa-house-chimney text-xs"></i>
+            <i className="fa-solid fa-house-chimney text-xs" aria-hidden="true"></i>
             <span>{t.authPage.hostRole}</span>
           </button>
         </div>
@@ -91,10 +95,11 @@ export default function InscriptionPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label htmlFor="register-prenom" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 {t.authPage.firstNameLabel}
               </label>
               <input
+                id="register-prenom"
                 type="text"
                 name="prenom"
                 required
@@ -105,10 +110,11 @@ export default function InscriptionPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label htmlFor="register-nom" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 {t.authPage.lastNameLabel}
               </label>
               <input
+                id="register-nom"
                 type="text"
                 name="nom"
                 required
@@ -122,14 +128,15 @@ export default function InscriptionPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label htmlFor="register-telephone" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 {t.authPage.whatsappLabel}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                  <i className="fa-solid fa-phone text-xs"></i>
+                  <i className="fa-solid fa-phone text-xs" aria-hidden="true"></i>
                 </div>
                 <input
+                  id="register-telephone"
                   type="tel"
                   name="telephone"
                   required
@@ -142,14 +149,15 @@ export default function InscriptionPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label htmlFor="register-email" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 {t.contactPage.emailLabelInput}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                  <i className="fa-solid fa-envelope text-xs"></i>
+                  <i className="fa-solid fa-envelope text-xs" aria-hidden="true"></i>
                 </div>
                 <input
+                  id="register-email"
                   type="email"
                   name="email"
                   value={formData.email}
@@ -163,11 +171,12 @@ export default function InscriptionPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label htmlFor="register-password" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 {t.authPage.passwordLabel}
               </label>
               <div className="relative">
                 <input
+                  id="register-password"
                   type={showPassword ? 'text' : 'password'}
                   name="password"
                   required
@@ -179,19 +188,21 @@ export default function InscriptionPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
                   className="absolute inset-y-0 right-0 px-2.5 flex items-center gap-1 text-slate-500 hover:text-brand-600 cursor-pointer z-10 select-none"
                 >
-                  <i className={`fa-solid ${showPassword ? 'fa-eye-slash text-brand-600 text-xs' : 'fa-eye text-slate-400 text-xs'}`}></i>
+                  <i className={`fa-solid ${showPassword ? 'fa-eye-slash text-brand-600 text-xs' : 'fa-eye text-slate-400 text-xs'}`} aria-hidden="true"></i>
                   <span className="text-[10px] font-bold uppercase text-slate-600 hover:text-brand-600">{showPassword ? 'Masquer' : 'Afficher'}</span>
                 </button>
               </div>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label htmlFor="register-confirm-password" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 {t.authPage.confirmPasswordLabel}
               </label>
               <div className="relative">
                 <input
+                  id="register-confirm-password"
                   type={showPassword ? 'text' : 'password'}
                   name="confirmPassword"
                   required
@@ -203,9 +214,10 @@ export default function InscriptionPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
                   className="absolute inset-y-0 right-0 px-2.5 flex items-center gap-1 text-slate-500 hover:text-brand-600 cursor-pointer z-10 select-none"
                 >
-                  <i className={`fa-solid ${showPassword ? 'fa-eye-slash text-brand-600 text-xs' : 'fa-eye text-slate-400 text-xs'}`}></i>
+                  <i className={`fa-solid ${showPassword ? 'fa-eye-slash text-brand-600 text-xs' : 'fa-eye text-slate-400 text-xs'}`} aria-hidden="true"></i>
                   <span className="text-[10px] font-bold uppercase text-slate-600 hover:text-brand-600">{showPassword ? 'Masquer' : 'Afficher'}</span>
                 </button>
               </div>

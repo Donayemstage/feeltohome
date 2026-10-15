@@ -254,112 +254,265 @@ export function formatImageUrl(url: string | undefined | null): string {
   return `${getApiBaseUrl()}${url.startsWith('/') ? '' : '/'}${url}`;
 }
 
+// --- Cache & Revalidation Architecture ---
+interface CacheEntry<T> {
+  data: T;
+  timestamp: number;
+}
+
+const memoryCache = new Map<string, CacheEntry<unknown>>();
+const inFlightRequests = new Map<string, Promise<unknown>>();
+
+function getCachedData<T>(key: string, ttlMs: number): T | null {
+  if (typeof window === 'undefined') return null; // Server context relies on Next.js Data Cache
+  const entry = memoryCache.get(key);
+  if (!entry) return null;
+  if (Date.now() - entry.timestamp > ttlMs) {
+    memoryCache.delete(key);
+    return null;
+  }
+  return entry.data as T;
+}
+
+function setCachedData<T>(key: string, data: T): void {
+  if (typeof window === 'undefined') return;
+  memoryCache.set(key, { data, timestamp: Date.now() });
+}
+
+export function clearApiCache(): void {
+  memoryCache.clear();
+  inFlightRequests.clear();
+}
+
 export async function fetchLogements(params: FilterParams = {}): Promise<LogementData[]> {
-  try {
-    const query = new URLSearchParams();
+  const query = new URLSearchParams();
 
-    const villeFilter = params.ville || params.destination;
-    if (villeFilter && villeFilter.trim()) {
-      query.append('ville', villeFilter.trim());
-    }
-
-    if (params.type && params.type !== 'TOUS') {
-      query.append('type', params.type.trim());
-    }
-
-    if (params.prix_min) {
-      query.append('prix_min', String(params.prix_min));
-    }
-
-    if (params.prix_max) {
-      query.append('prix_max', String(params.prix_max));
-    }
-
-    if (params.search && params.search.trim()) {
-      query.append('search', params.search.trim());
-    }
-
-    if (params.ordering) {
-      query.append('ordering', params.ordering);
-    }
-
-    if (params.equipements && params.equipements.length > 0) {
-      params.equipements.forEach(eq => {
-        if (eq.trim()) query.append('equipements', eq.trim());
-      });
-    }
-
-    const baseUrl = getApiBaseUrl();
-    const url = baseUrl ? `${baseUrl}/api/logements/?${query.toString()}` : `/api/logements/?${query.toString()}`;
-    const response = await fetch(url, { cache: 'no-store' });
-
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    let results: LogementData[] = [];
-    if (Array.isArray(data)) {
-      results = data;
-    } else if (data && Array.isArray(data.results)) {
-      results = data.results;
-    }
-
-    if (results.length > 0) {
-      return results;
-    }
-  } catch (err) {
-    console.warn("Utilisation des logements de démonstration FeelToHome en mode fallback", err);
+  const villeFilter = params.ville || params.destination;
+  if (villeFilter && villeFilter.trim()) {
+    query.append('ville', villeFilter.trim());
   }
 
-  // Fallback demo filtering for seamless experience
-  let filtered = [...DEMO_LOGEMENTS];
-  const targetVille = params.ville || params.destination;
-  if (targetVille && targetVille.trim()) {
-    filtered = filtered.filter(l => l.ville.toLowerCase().includes(targetVille.trim().toLowerCase()) || l.quartier.toLowerCase().includes(targetVille.trim().toLowerCase()));
-  }
   if (params.type && params.type !== 'TOUS') {
-    filtered = filtered.filter(l => l.type.toUpperCase() === params.type?.toUpperCase());
+    query.append('type', params.type.trim());
   }
-  return filtered;
+
+  if (params.prix_min) {
+    query.append('prix_min', String(params.prix_min));
+  }
+
+  if (params.prix_max) {
+    query.append('prix_max', String(params.prix_max));
+  }
+
+  if (params.search && params.search.trim()) {
+    query.append('search', params.search.trim());
+  }
+
+  if (params.ordering) {
+    query.append('ordering', params.ordering);
+  }
+
+  if (params.equipements && params.equipements.length > 0) {
+    params.equipements.forEach(eq => {
+      if (eq.trim()) query.append('equipements', eq.trim());
+    });
+  }
+
+  const queryString = query.toString();
+  const cacheKey = `logements:${queryString}`;
+
+  // 1. Client-side in-memory cache check (TTL: 60s)
+  const cached = getCachedData<LogementData[]>(cacheKey, 60_000);
+  if (cached) {
+    return cached;
+  }
+
+  // 2. Client-side in-flight request deduplication
+  if (typeof window !== 'undefined' && inFlightRequests.has(cacheKey)) {
+    return inFlightRequests.get(cacheKey) as Promise<LogementData[]>;
+  }
+
+  const fetchPromise = (async () => {
+    try {
+      const baseUrl = getApiBaseUrl();
+      const url = baseUrl ? `${baseUrl}/api/logements/?${queryString}` : `/api/logements/?${queryString}`;
+      
+      // Server-side: Next.js ISR revalidation (60 seconds)
+      // Client-side: Browser fetch handles network request without cache bypass
+      const fetchOptions: RequestInit = {
+        next: { revalidate: 60 },
+      } as RequestInit;
+
+      const response = await fetch(url, fetchOptions);
+
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      let results: LogementData[] = [];
+      if (Array.isArray(data)) {
+        results = data;
+      } else if (data && Array.isArray(data.results)) {
+        results = data.results;
+      }
+
+      if (results.length > 0) {
+        setCachedData(cacheKey, results);
+        return results;
+      }
+    } catch (err) {
+      console.warn("Utilisation des logements de démonstration FeelToHome en mode fallback", err);
+    } finally {
+      if (typeof window !== 'undefined') {
+        inFlightRequests.delete(cacheKey);
+      }
+    }
+
+    // Fallback demo filtering for seamless experience
+    let filtered = [...DEMO_LOGEMENTS];
+    const targetVille = params.ville || params.destination;
+    if (targetVille && targetVille.trim()) {
+      filtered = filtered.filter(l => l.ville.toLowerCase().includes(targetVille.trim().toLowerCase()) || l.quartier.toLowerCase().includes(targetVille.trim().toLowerCase()));
+    }
+    if (params.type && params.type !== 'TOUS') {
+      filtered = filtered.filter(l => l.type.toUpperCase() === params.type?.toUpperCase());
+    }
+    return filtered;
+  })();
+
+  if (typeof window !== 'undefined') {
+    inFlightRequests.set(cacheKey, fetchPromise);
+  }
+
+  return fetchPromise;
 }
 
 export async function fetchLogementBySlug(slug: string): Promise<LogementData | null> {
-  try {
-    const baseUrl = getApiBaseUrl();
-    const url = baseUrl ? `${baseUrl}/api/logements/${slug}/` : `/api/logements/${slug}/`;
-    const response = await fetch(url, { cache: 'no-store' });
+  const cacheKey = `logement:${slug}`;
 
-    if (response.ok) {
-      return await response.json();
-    }
-  } catch (err) {
-    console.warn("Utilisation du logement démo par slug", err);
+  // 1. Client-side in-memory cache check (TTL: 60s)
+  const cached = getCachedData<LogementData>(cacheKey, 60_000);
+  if (cached) {
+    return cached;
   }
 
-  const demoMatch = DEMO_LOGEMENTS.find(l => l.slug === slug || String(l.id) === slug);
-  return demoMatch || DEMO_LOGEMENTS[0];
+  // 2. Client-side in-flight deduplication
+  if (typeof window !== 'undefined' && inFlightRequests.has(cacheKey)) {
+    return inFlightRequests.get(cacheKey) as Promise<LogementData | null>;
+  }
+
+  const fetchPromise = (async () => {
+    try {
+      const baseUrl = getApiBaseUrl();
+      const url = baseUrl ? `${baseUrl}/api/logements/${slug}/` : `/api/logements/${slug}/`;
+      
+      const fetchOptions: RequestInit = {
+        next: { revalidate: 60 },
+      } as RequestInit;
+
+      const response = await fetch(url, fetchOptions);
+
+      if (response.ok) {
+        const data: LogementData = await response.json();
+        setCachedData(cacheKey, data);
+        return data;
+      }
+    } catch (err) {
+      console.warn("Utilisation du logement démo par slug", err);
+    } finally {
+      if (typeof window !== 'undefined') {
+        inFlightRequests.delete(cacheKey);
+      }
+    }
+
+    const demoMatch = DEMO_LOGEMENTS.find(l => l.slug === slug || String(l.id) === slug);
+    return demoMatch || DEMO_LOGEMENTS[0];
+  })();
+
+  if (typeof window !== 'undefined') {
+    inFlightRequests.set(cacheKey, fetchPromise);
+  }
+
+  return fetchPromise;
 }
 
 export async function fetchEquipements(): Promise<EquipementData[]> {
-  try {
-    const baseUrl = getApiBaseUrl();
-    const url = baseUrl ? `${baseUrl}/api/equipements/` : `/api/equipements/`;
-    const response = await fetch(url, { cache: 'no-store' });
+  const cacheKey = 'equipements:all';
 
-    if (response.ok) {
-      const data = await response.json();
-      if (Array.isArray(data)) return data;
-      if (data && Array.isArray(data.results)) return data.results;
-    }
-  } catch (err) {
-    console.warn("Equipements fallback", err);
+  // 1. Client-side in-memory cache check (TTL: 300s = 5 minutes)
+  const cached = getCachedData<EquipementData[]>(cacheKey, 300_000);
+  if (cached) {
+    return cached;
   }
 
-  return [
-    { id: 1, nom: "Wi-Fi Haut Débit", slug: "wifi", icon_name: "wifi" },
-    { id: 2, nom: "Piscine", slug: "piscine", icon_name: "pool" },
-    { id: 3, nom: "Climatisation", slug: "climatisation", icon_name: "ac_unit" },
-    { id: 4, nom: "Parking Sécurisé", slug: "parking", icon_name: "local_parking" },
-  ];
+  // 2. Client-side in-flight deduplication
+  if (typeof window !== 'undefined' && inFlightRequests.has(cacheKey)) {
+    return inFlightRequests.get(cacheKey) as Promise<EquipementData[]>;
+  }
+
+  const fetchPromise = (async () => {
+    try {
+      const baseUrl = getApiBaseUrl();
+      const url = baseUrl ? `${baseUrl}/api/equipements/` : `/api/equipements/`;
+      
+      const fetchOptions: RequestInit = {
+        next: { revalidate: 300 },
+      } as RequestInit;
+
+      const response = await fetch(url, fetchOptions);
+
+      if (response.ok) {
+        const data = await response.json();
+        let items: EquipementData[] = [];
+        if (Array.isArray(data)) items = data;
+        else if (data && Array.isArray(data.results)) items = data.results;
+        
+        if (items.length > 0) {
+          setCachedData(cacheKey, items);
+          return items;
+        }
+      }
+    } catch (err) {
+      console.warn("Equipements fallback", err);
+    } finally {
+      if (typeof window !== 'undefined') {
+        inFlightRequests.delete(cacheKey);
+      }
+    }
+
+    return [
+      { id: 1, nom: "Wi-Fi Haut Débit", slug: "wifi", icon_name: "wifi" },
+      { id: 2, nom: "Piscine", slug: "piscine", icon_name: "pool" },
+      { id: 3, nom: "Climatisation", slug: "climatisation", icon_name: "ac_unit" },
+      { id: 4, nom: "Parking Sécurisé", slug: "parking", icon_name: "local_parking" },
+    ];
+  })();
+
+  if (typeof window !== 'undefined') {
+    inFlightRequests.set(cacheKey, fetchPromise);
+  }
+
+  return fetchPromise;
 }
+
+/**
+ * Endpoint de vérification dynamique de disponibilité.
+ * CRITIQUE : Ne JAMAIS mettre en cache les disponibilités pour éviter les doubles réservations.
+ */
+export async function checkDisponibiliteDirecte(
+  logementId: number | string,
+  dateArrivee: string,
+  dateDepart: string
+): Promise<{ disponible: boolean; message?: string }> {
+  const baseUrl = getApiBaseUrl();
+  const url = `${baseUrl ? baseUrl : ''}/api/reservations/disponibilite/?logement_id=${logementId}&date_arrivee=${dateArrivee}&date_depart=${dateDepart}`;
+  
+  // Toujours forcer no-store pour garantir l'état temps réel
+  const response = await fetch(url, { cache: 'no-store' });
+  if (!response.ok) {
+    return { disponible: false, message: 'Impossible de vérifier la disponibilité' };
+  }
+  return await response.json();
+}
+

@@ -13,7 +13,24 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-feeltohome-phase0-dev
 
 DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-ALLOWED_HOSTS = ['*']
+# Allowed Hosts configuration
+_allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', '')
+if _allowed_hosts_env.strip():
+    ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts_env.split(',') if h.strip()]
+elif DEBUG:
+    # Local development hosts
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'testserver']
+else:
+    # Documented production hosts for FeelToHome (Render & Custom Domain)
+    ALLOWED_HOSTS = [
+        'feeltohome.com',
+        'www.feeltohome.com',
+        'api.feeltohome.com',
+        'feeltohome-backend.onrender.com',
+        '.onrender.com',
+        'localhost',
+        '127.0.0.1',
+    ]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -100,16 +117,55 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS Config
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = ['*']
-CORS_ALLOW_METHODS = ['*']
+
+_cors_env = os.environ.get('CORS_ALLOWED_ORIGINS', '')
+if _cors_env.strip():
+    CORS_ALLOWED_ORIGINS = [o.strip() for o in _cors_env.split(',') if o.strip()]
+    CORS_ALLOW_ALL_ORIGINS = False
+elif DEBUG:
+    CORS_ALLOWED_ORIGINS = [
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+    ]
+    CORS_ALLOW_ALL_ORIGINS = False
+else:
+    CORS_ALLOWED_ORIGINS = [
+        'https://feeltohome.vercel.app',
+        'https://feeltohome.com',
+        'https://www.feeltohome.com',
+    ]
+    CORS_ALLOW_ALL_ORIGINS = False
+    # Safely authorize Vercel preview deployment URLs (e.g. feeltohome-git-*.vercel.app)
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        r"^https:\/\/.*\.vercel\.app$",
+    ]
+
+# CSRF Trusted Origins (Django 4.0+)
+_csrf_env = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
+if _csrf_env.strip():
+    CSRF_TRUSTED_ORIGINS = [o.strip() for o in _csrf_env.split(',') if o.strip()]
+elif DEBUG:
+    CSRF_TRUSTED_ORIGINS = [
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+    ]
+else:
+    CSRF_TRUSTED_ORIGINS = [
+        'https://feeltohome.vercel.app',
+        'https://feeltohome.com',
+        'https://www.feeltohome.com',
+        'https://feeltohome-backend.onrender.com',
+    ]
 
 # REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10

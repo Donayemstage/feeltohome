@@ -84,10 +84,11 @@ export const FiltersPanel: React.FC<{ onCloseMobile?: () => void }> = ({ onClose
 
       {/* City Filter */}
       <div className="space-y-2">
-        <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+        <label htmlFor="filter-city" className="text-xs font-bold text-slate-700 uppercase tracking-wider">
           {t.catalog.cityLabel}
         </label>
         <select
+          id="filter-city"
           value={selectedCity}
           onChange={(e) => setSelectedCity(e.target.value)}
           className="w-full bg-slate-50 border border-slate-300 rounded-none p-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-500"
@@ -101,69 +102,85 @@ export const FiltersPanel: React.FC<{ onCloseMobile?: () => void }> = ({ onClose
       </div>
 
       {/* Price Range Filter */}
-      <div className="space-y-2">
-        <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+      <fieldset className="space-y-2 border-none p-0 m-0">
+        <legend className="text-xs font-bold text-slate-700 uppercase tracking-wider">
           {t.catalog.priceRange}
-        </label>
+        </legend>
         <div className="grid grid-cols-2 gap-2">
-          <input
-            type="number"
-            placeholder="Min (XAF)"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-300 rounded-none p-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-500"
-          />
-          <input
-            type="number"
-            placeholder="Max (XAF)"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-300 rounded-none p-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-500"
-          />
+          <div>
+            <label htmlFor="filter-min-price" className="sr-only">Prix minimum en XAF</label>
+            <input
+              id="filter-min-price"
+              type="number"
+              placeholder="Min (XAF)"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-300 rounded-none p-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="filter-max-price" className="sr-only">Prix maximum en XAF</label>
+            <input
+              id="filter-max-price"
+              type="number"
+              placeholder="Max (XAF)"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-300 rounded-none p-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-500"
+            />
+          </div>
         </div>
-      </div>
+      </fieldset>
 
       {/* Property Type Filter */}
-      <div className="space-y-2">
-        <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+      <fieldset className="space-y-2 border-none p-0 m-0">
+        <legend className="text-xs font-bold text-slate-700 uppercase tracking-wider">
           Type de bien
-        </label>
+        </legend>
         <div className="space-y-2 text-xs">
-          {['HOTEL', 'APPARTEMENT', 'STUDIO', 'RESIDENCE', 'VILLA', 'AUBERGE'].map((typeKey) => (
-            <label key={typeKey} className="flex items-center gap-2 cursor-pointer text-slate-700 hover:text-slate-900 font-medium">
-              <input
-                type="radio"
-                name="property_type"
-                checked={selectedType === typeKey}
-                onChange={() => setSelectedType(typeKey)}
-                className="rounded-none text-brand-500 focus:ring-brand-500"
-              />
-              <span>{t.propertyTypes[typeKey as keyof typeof t.propertyTypes] || typeKey}</span>
-            </label>
-          ))}
+          {['HOTEL', 'APPARTEMENT', 'STUDIO', 'RESIDENCE', 'VILLA', 'AUBERGE'].map((typeKey) => {
+            const radioId = `property-type-${typeKey.toLowerCase()}`;
+            return (
+              <label key={typeKey} htmlFor={radioId} className="flex items-center gap-2 cursor-pointer text-slate-700 hover:text-slate-900 font-medium">
+                <input
+                  id={radioId}
+                  type="radio"
+                  name="property_type"
+                  checked={selectedType === typeKey}
+                  onChange={() => setSelectedType(typeKey)}
+                  className="rounded-none text-brand-500 focus:ring-brand-500"
+                />
+                <span>{t.propertyTypes[typeKey as keyof typeof t.propertyTypes] || typeKey}</span>
+              </label>
+            );
+          })}
         </div>
-      </div>
+      </fieldset>
 
       {/* Dynamic Equipment Checkboxes from Backend API */}
       {equipments.length > 0 && (
-        <div className="space-y-2 pt-2 border-t border-slate-200">
-          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+        <fieldset className="space-y-2 pt-2 border-t border-slate-200 border-x-0 border-b-0 p-0 m-0">
+          <legend className="text-xs font-bold text-slate-700 uppercase tracking-wider">
             {t.catalog.amenitiesLabel}
-          </label>
+          </legend>
           <div className="space-y-2 text-xs max-h-40 overflow-y-auto">
-            {equipments.map((eq) => (
-              <label key={eq.id} className="flex items-center gap-2 cursor-pointer text-slate-700 hover:text-slate-900 font-medium">
-                <input
-                  type="checkbox"
-                  checked={selectedEquips.includes(eq.slug)}
-                  onChange={() => handleToggleEquip(eq.slug)}
-                  className="rounded-none text-brand-500 focus:ring-brand-500"
-                />
-                <span>{eq.nom}</span>
-              </label>
-            ))}
+            {equipments.map((eq) => {
+              const equipId = `filter-equip-${eq.id}`;
+              return (
+                <label key={eq.id} htmlFor={equipId} className="flex items-center gap-2 cursor-pointer text-slate-700 hover:text-slate-900 font-medium">
+                  <input
+                    id={equipId}
+                    type="checkbox"
+                    checked={selectedEquips.includes(eq.slug)}
+                    onChange={() => handleToggleEquip(eq.slug)}
+                    className="rounded-none text-brand-500 focus:ring-brand-500"
+                  />
+                  <span>{eq.nom}</span>
+                </label>
+              );
+            })}
           </div>
-        </div>
+        </fieldset>
       )}
 
       {/* Submit Filter Button (Square) */}

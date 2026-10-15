@@ -1,9 +1,17 @@
 import type { Metadata } from 'next';
+import { Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { LanguageProvider } from '@/components/LanguageContext';
+import { FavoritesProvider } from '@/components/FavoritesContext';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'FeelToHome — Trouvez votre chez-vous au Cameroun',
@@ -28,18 +36,16 @@ export default function RootLayout({
   return (
     <html lang="fr" className="scroll-smooth">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
       </head>
-      <body className="min-h-screen flex flex-col justify-between bg-slate-50 font-sans text-slate-900">
+      <body className={`min-h-screen flex flex-col justify-between bg-slate-50 font-sans text-slate-900 ${plusJakartaSans.className}`}>
         <LanguageProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <MobileBottomNav />
+          <FavoritesProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <MobileBottomNav />
+          </FavoritesProvider>
         </LanguageProvider>
       </body>
     </html>

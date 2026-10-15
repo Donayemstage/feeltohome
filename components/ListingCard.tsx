@@ -1,13 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from './LanguageContext';
+import { useFavorites } from './FavoritesContext';
 import { LogementData } from '@/lib/api';
 
-export const ListingCard: React.FC<{ listing: LogementData }> = ({ listing }) => {
+export const ListingCard: React.FC<{ listing: LogementData; priority?: boolean }> = ({ listing, priority = false }) => {
   const { t } = useLanguage();
-  const [isSaved, setIsSaved] = useState(false);
+  const { isSaved, toggleFavorite } = useFavorites();
+  const saved = isSaved(listing.slug);
 
   const photoUrl = listing.photos && listing.photos.length > 0
     ? listing.photos[0].url
@@ -21,29 +24,42 @@ export const ListingCard: React.FC<{ listing: LogementData }> = ({ listing }) =>
     <article className="bg-white rounded-none overflow-hidden border border-slate-300 shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col group">
       {/* Image Container with Square Borders */}
       <div className="relative h-52 w-full bg-slate-100 overflow-hidden rounded-none">
-        <img
-          src={photoUrl}
-          alt={listing.nom}
-          onError={(e) => {
-            e.currentTarget.src = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80';
-          }}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 rounded-none"
-        />
+        <Link
+          href={`/logements/${listing.slug}`}
+          tabIndex={-1}
+          aria-hidden="true"
+          className="block absolute inset-0 z-0"
+        >
+          <Image
+            src={photoUrl}
+            alt={listing.nom || 'Logement FeelToHome'}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-500 rounded-none"
+            priority={priority}
+          />
+        </Link>
         {/* Type Badge (Square) */}
-        <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-none text-xs font-bold text-slate-800 shadow-xs border border-slate-200">
+        <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-none text-xs font-bold text-slate-800 shadow-xs border border-slate-200 pointer-events-none z-10">
           {t.propertyTypes[listing.type as keyof typeof t.propertyTypes] || listing.type_display || listing.type}
         </div>
         {/* Demo Badge (Square) */}
-        <div className="absolute top-3 right-3 bg-amber-500 text-white px-2.5 py-0.5 rounded-none text-[10px] font-extrabold uppercase tracking-wider shadow-xs">
+        <div className="absolute top-3 right-3 bg-amber-500 text-white px-2.5 py-0.5 rounded-none text-[10px] font-extrabold uppercase tracking-wider shadow-xs pointer-events-none z-10">
           {t.catalog.demoBadge}
         </div>
         {/* Favoriting button (Square) */}
         <button
-          onClick={(e) => { e.preventDefault(); setIsSaved(!isSaved); }}
-          className="absolute bottom-3 right-3 w-8 h-8 rounded-none bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-600 hover:text-red-500 transition-colors shadow-xs border border-slate-200"
-          aria-label={isSaved ? "Retirer des favoris" : "Ajouter aux favoris"}
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleFavorite(listing.slug);
+          }}
+          className="absolute bottom-3 right-3 z-10 w-8 h-8 rounded-none bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-600 hover:text-red-500 transition-colors shadow-xs border border-slate-200 focus:outline-none focus:ring-1 focus:ring-brand-500"
+          aria-label={saved ? "Retirer des favoris" : "Ajouter aux favoris"}
+          title={saved ? "Retirer des favoris" : "Ajouter aux favoris"}
         >
-          <i className={`${isSaved ? 'fa-solid text-red-500' : 'fa-regular text-slate-600'} fa-heart text-sm`}></i>
+          <i className={`${saved ? 'fa-solid text-red-500' : 'fa-regular text-slate-600'} fa-heart text-sm`}></i>
         </button>
       </div>
 
@@ -58,7 +74,12 @@ export const ListingCard: React.FC<{ listing: LogementData }> = ({ listing }) =>
 
           {/* Title */}
           <h3 className="text-base font-bold text-slate-900 group-hover:text-brand-600 transition-colors line-clamp-1">
-            {listing.nom}
+            <Link
+              href={`/logements/${listing.slug}`}
+              className="hover:underline focus:outline-none focus:ring-1 focus:ring-brand-500"
+            >
+              {listing.nom}
+            </Link>
           </h3>
 
           {/* Capacity Specs with FontAwesome icons */}

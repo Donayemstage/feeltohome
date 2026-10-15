@@ -4,10 +4,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from './LanguageContext';
+import { useFavorites } from './FavoritesContext';
 import { Locale } from '@/lib/i18n';
 
 export const Header: React.FC = () => {
   const { locale, setLocale, t } = useLanguage();
+  const { savedCount, isLoaded } = useFavorites();
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
@@ -110,6 +112,24 @@ export const Header: React.FC = () => {
             }`}
           >
             {t.nav.contact}
+          </Link>
+
+          <Link
+            href="/enregistres"
+            className={`px-3 py-1.5 rounded-none transition-all flex items-center gap-1.5 ${
+              isActive('/enregistres')
+                ? 'bg-slate-900 text-white font-bold shadow-xs'
+                : 'text-slate-700 hover:text-brand-600 hover:bg-slate-100'
+            }`}
+            aria-label={`${t.nav.saved}${isLoaded && savedCount > 0 ? ` (${savedCount})` : ''}`}
+          >
+            <i className="fa-regular fa-heart text-xs"></i>
+            <span>{t.nav.saved}</span>
+            {isLoaded && savedCount > 0 && (
+              <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                {savedCount > 99 ? '99+' : savedCount}
+              </span>
+            )}
           </Link>
 
           <Link
@@ -306,6 +326,25 @@ export const Header: React.FC = () => {
             }`}
           >
             {t.nav.contact}
+          </Link>
+          <Link
+            href="/enregistres"
+            onClick={() => setIsMenuOpen(false)}
+            className={`flex items-center justify-between px-3.5 py-2 text-xs rounded-none transition-all ${
+              isActive('/enregistres')
+                ? 'bg-slate-900 text-white font-bold'
+                : 'text-slate-800 font-semibold hover:bg-slate-100'
+            }`}
+          >
+            <span className="flex items-center gap-2">
+              <i className="fa-regular fa-heart text-xs"></i>
+              <span>{t.nav.saved}</span>
+            </span>
+            {isLoaded && savedCount > 0 && (
+              <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                {savedCount > 99 ? '99+' : savedCount}
+              </span>
+            )}
           </Link>
           <Link
             href="/devenir-hote"

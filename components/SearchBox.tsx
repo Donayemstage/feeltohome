@@ -21,15 +21,24 @@ export const SearchBox: React.FC<{ initialDestination?: string }> = ({ initialDe
   const [viewDate, setViewDate] = useState(new Date(todayDate.getFullYear(), todayDate.getMonth(), 1));
   const calendarRef = useRef<HTMLDivElement>(null);
 
-  // Close calendar when clicking outside
+  // Close calendar when clicking outside or pressing Escape
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
         setActiveCalendar(null);
       }
     };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setActiveCalendar(null);
+      }
+    };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -114,10 +123,11 @@ export const SearchBox: React.FC<{ initialDestination?: string }> = ({ initialDe
         <div className="lg:col-span-4 bg-slate-800/80 hover:bg-slate-800 transition-all p-3 rounded-none flex items-center gap-3 border border-slate-700">
           <i className="fa-solid fa-location-dot text-brand-400 text-base shrink-0"></i>
           <div className="flex flex-col text-left w-full min-w-0">
-            <label className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+            <label htmlFor="search-destination" className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
               {t.hero.destinationLabel}
             </label>
             <input
+              id="search-destination"
               type="text"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
@@ -128,40 +138,48 @@ export const SearchBox: React.FC<{ initialDestination?: string }> = ({ initialDe
         </div>
 
         {/* Check-in Date Field */}
-        <div
+        <button
+          type="button"
           onClick={() => setActiveCalendar(activeCalendar === 'checkin' ? null : 'checkin')}
-          className={`lg:col-span-3 bg-slate-800/80 hover:bg-slate-800 transition-all p-3 rounded-none flex items-center gap-3 border cursor-pointer ${
+          aria-haspopup="dialog"
+          aria-expanded={activeCalendar === 'checkin'}
+          aria-label={`${t.hero.checkIn} : ${formatDateDisplay(checkIn)}`}
+          className={`lg:col-span-3 bg-slate-800/80 hover:bg-slate-800 transition-all p-3 rounded-none flex items-center gap-3 border cursor-pointer text-left w-full focus:outline-none focus:ring-1 focus:ring-brand-400 ${
             activeCalendar === 'checkin' ? 'border-brand-400 ring-1 ring-brand-400 bg-slate-800' : 'border-slate-700'
           }`}
         >
-          <i className="fa-solid fa-calendar-days text-brand-400 text-base shrink-0"></i>
+          <i className="fa-solid fa-calendar-days text-brand-400 text-base shrink-0" aria-hidden="true"></i>
           <div className="flex flex-col text-left w-full min-w-0">
-            <label className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
               {t.hero.checkIn}
-            </label>
+            </span>
             <span className={`text-xs font-semibold ${checkIn ? 'text-white font-bold' : 'text-slate-400'}`}>
               {formatDateDisplay(checkIn)}
             </span>
           </div>
-        </div>
+        </button>
 
         {/* Check-out Date Field */}
-        <div
+        <button
+          type="button"
           onClick={() => setActiveCalendar(activeCalendar === 'checkout' ? null : 'checkout')}
-          className={`lg:col-span-3 bg-slate-800/80 hover:bg-slate-800 transition-all p-3 rounded-none flex items-center gap-3 border cursor-pointer ${
+          aria-haspopup="dialog"
+          aria-expanded={activeCalendar === 'checkout'}
+          aria-label={`${t.hero.checkOut} : ${formatDateDisplay(checkOut)}`}
+          className={`lg:col-span-3 bg-slate-800/80 hover:bg-slate-800 transition-all p-3 rounded-none flex items-center gap-3 border cursor-pointer text-left w-full focus:outline-none focus:ring-1 focus:ring-brand-400 ${
             activeCalendar === 'checkout' ? 'border-brand-400 ring-1 ring-brand-400 bg-slate-800' : 'border-slate-700'
           }`}
         >
-          <i className="fa-solid fa-calendar-days text-brand-400 text-base shrink-0"></i>
+          <i className="fa-solid fa-calendar-days text-brand-400 text-base shrink-0" aria-hidden="true"></i>
           <div className="flex flex-col text-left w-full min-w-0">
-            <label className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
               {t.hero.checkOut}
-            </label>
+            </span>
             <span className={`text-xs font-semibold ${checkOut ? 'text-white font-bold' : 'text-slate-400'}`}>
               {formatDateDisplay(checkOut)}
             </span>
           </div>
-        </div>
+        </button>
 
         {/* Search Submit CTA */}
         <div className="lg:col-span-2">
@@ -177,21 +195,28 @@ export const SearchBox: React.FC<{ initialDestination?: string }> = ({ initialDe
 
       {/* Interactive Calendar Popover (Square) */}
       {activeCalendar && (
-        <div className="absolute left-0 right-0 sm:left-auto sm:right-12 top-full mt-3 z-50 bg-white rounded-none p-4 sm:p-5 shadow-2xl border border-slate-300 text-slate-900 w-full sm:w-84 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div
+          role="dialog"
+          aria-modal="false"
+          aria-label={activeCalendar === 'checkin' ? "Sélectionner la date d'arrivée" : "Sélectionner la date de départ"}
+          className="absolute left-0 right-0 sm:left-auto sm:right-12 top-full mt-3 z-50 bg-white rounded-none p-4 sm:p-5 shadow-2xl border border-slate-300 text-slate-900 w-full sm:w-88 animate-in fade-in slide-in-from-top-2 duration-200"
+        >
           
           {/* Popover Header */}
           <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
             <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-              <i className="fa-solid fa-calendar-days text-brand-500"></i>
+              <i className="fa-solid fa-calendar-days text-brand-500" aria-hidden="true"></i>
               <span>
                 {activeCalendar === 'checkin' ? 'Sélectionner la date d\'arrivée' : 'Sélectionner la date de départ'}
               </span>
             </span>
             <button
+              type="button"
               onClick={() => setActiveCalendar(null)}
-              className="p-1 text-slate-400 hover:text-slate-600 rounded-none"
+              className="w-10 h-10 flex items-center justify-center text-slate-600 hover:text-slate-900 rounded-none focus:outline-none focus:ring-1 focus:ring-slate-400"
+              aria-label="Fermer le calendrier"
             >
-              <i className="fa-solid fa-xmark text-sm"></i>
+              <i className="fa-solid fa-xmark text-sm" aria-hidden="true"></i>
             </button>
           </div>
 
@@ -200,10 +225,10 @@ export const SearchBox: React.FC<{ initialDestination?: string }> = ({ initialDe
             <button
               type="button"
               onClick={prevMonth}
-              className="p-1.5 rounded-none hover:bg-slate-100 text-slate-600 transition-colors border border-slate-200"
+              className="w-10 h-10 rounded-none hover:bg-slate-100 text-slate-700 flex items-center justify-center transition-colors border border-slate-200"
               aria-label="Mois précédent"
             >
-              <i className="fa-solid fa-chevron-left text-xs"></i>
+              <i className="fa-solid fa-chevron-left text-xs" aria-hidden="true"></i>
             </button>
             <span className="text-sm font-extrabold text-slate-900">
               {monthNames[month]} {year}
@@ -211,17 +236,17 @@ export const SearchBox: React.FC<{ initialDestination?: string }> = ({ initialDe
             <button
               type="button"
               onClick={nextMonth}
-              className="p-1.5 rounded-none hover:bg-slate-100 text-slate-600 transition-colors border border-slate-200"
+              className="w-10 h-10 rounded-none hover:bg-slate-100 text-slate-700 flex items-center justify-center transition-colors border border-slate-200"
               aria-label="Mois suivant"
             >
-              <i className="fa-solid fa-chevron-right text-xs"></i>
+              <i className="fa-solid fa-chevron-right text-xs" aria-hidden="true"></i>
             </button>
           </div>
 
           {/* Day Labels */}
           <div className="grid grid-cols-7 gap-1 text-center mb-2">
             {dayLabels.map((day) => (
-              <span key={day} className="text-[11px] font-bold text-slate-400 uppercase">
+              <span key={day} className="text-[11px] font-extrabold text-slate-600 uppercase">
                 {day}
               </span>
             ))}
@@ -230,7 +255,7 @@ export const SearchBox: React.FC<{ initialDestination?: string }> = ({ initialDe
           {/* Calendar Days Grid */}
           <div className="grid grid-cols-7 gap-1 text-center">
             {Array.from({ length: startingDay }).map((_, i) => (
-              <div key={`empty-${i}`} className="h-9" />
+              <div key={`empty-${i}`} className="h-10 sm:h-11 min-h-[40px]" />
             ))}
 
             {Array.from({ length: daysInMonth }).map((_, i) => {
@@ -260,7 +285,7 @@ export const SearchBox: React.FC<{ initialDestination?: string }> = ({ initialDe
                   type="button"
                   disabled={isPast}
                   onClick={() => handleDateClick(dateStr)}
-                  className={`h-9 w-full rounded-none text-xs flex items-center justify-center transition-all ${cellStyle}`}
+                  className={`h-10 sm:h-11 min-h-[40px] w-full rounded-none text-xs flex items-center justify-center transition-all ${cellStyle}`}
                 >
                   {dayNumber}
                 </button>
@@ -276,14 +301,14 @@ export const SearchBox: React.FC<{ initialDestination?: string }> = ({ initialDe
                 setCheckIn('');
                 setCheckOut('');
               }}
-              className="text-slate-500 hover:text-slate-800 font-semibold"
+              className="text-slate-600 hover:text-slate-900 font-bold min-h-[40px] flex items-center px-2"
             >
               Effacer les dates
             </button>
             <button
               type="button"
               onClick={() => setActiveCalendar(null)}
-              className="px-3.5 py-1.5 bg-slate-900 text-white font-bold text-xs rounded-none"
+              className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-none min-h-[40px] flex items-center"
             >
               Valider
             </button>
