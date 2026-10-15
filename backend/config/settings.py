@@ -18,14 +18,17 @@ _allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', '')
 if _allowed_hosts_env.strip():
     ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts_env.split(',') if h.strip()]
 elif DEBUG:
-    # Local development hosts
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'testserver']
+    # Local development hosts + Vercel Preview
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'testserver', '.vercel.app', '.now.sh']
 else:
-    # Documented production hosts for FeelToHome (Render & Custom Domain)
+    # Documented production hosts for FeelToHome (Render, Vercel & Custom Domain)
     ALLOWED_HOSTS = [
         'feeltohome.com',
         'www.feeltohome.com',
         'api.feeltohome.com',
+        'feeltohome.vercel.app',
+        '.vercel.app',
+        '.now.sh',
         'feeltohome-backend.onrender.com',
         '.onrender.com',
         'localhost',
